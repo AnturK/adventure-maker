@@ -1,0 +1,109 @@
+{
+	"adventure_name": "plasma_mine",
+	"band_modifiers": {
+		"plasma": 1,
+		"high-energy": 1,
+		"uniform radio-waves": 1
+	},
+	"required_features": [
+		"ruins"
+	],
+	"loot_categories": [
+		"minerals"
+	],
+	"starting_node": "spooky",
+	"nodes": [
+		{
+			"name": "spooky",
+			"description": "You hear a spooky sound in the darkness. What do ?",
+			"image": "grue",
+			"on_exit_effects": [
+				{
+					"effect_type": "set",
+					"quality":"stuffs",
+					"value": "qualities_can_be_text"
+				}
+			],
+			"choices": [
+				{
+					"name": "Go into the dark",
+					"description_mod": "This will show up at the end of description if this choice is availible.",
+					"exit_node": "spooky_ded",
+					"on_selection_effects": [
+						{
+							"effect_type":"add",
+							"quality":"lost",
+							"value": 2
+						},
+						{
+							"effect_type":"set",
+							"quality":"unused",
+							"value": {"random":1,"low":1,"high":5}
+						}
+					]
+				},
+				{
+					"name": "Go the other way",
+					"exit_node": "spooky_win",
+					"requirements": [
+						{
+							"group_type": "req_all",
+							"requirements": [
+								{
+									"quality": "a",
+									"op": "=",
+									"value": "something"
+								},
+								{
+									"quality": "b",
+									"op": ">=",
+									"value": 11
+								}
+							]
+						},
+						{
+							"quality": "foo",
+							"op": "!=",
+							"value": "whatever"
+						},
+						{
+							"group_type": "req_one",
+							"requirements": [
+								{
+									"quality": "c",
+									"op": "=",
+									"value": "something"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "spooky_ded",
+			"description": "You have been eaten by a grue.",
+			"image": "signal_lost",
+			"choices": [
+				{
+					"name": "Die painfully...",
+					"exit_node": "FAIL"
+				}
+			]
+		},
+		{
+			"name": "spooky_win",
+			"description": "You find stacks of minerals.",
+			"on_enter": {
+				"remove_quality": "lost"
+			},
+			"image": "loot",
+			"choices": [
+				{
+					"name": "Grab loot and escape!",
+					"exit_node": "WIN"
+				}
+			]
+		}
+	]
+}
