@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Button, Col, Container, Row, Card, ListGroup, FormControl, FormGroup, Form, ListGroupItem, InputGroup } from 'react-bootstrap'
+import { Button, Col, Container, Row, Card,CardGroup, ListGroup, FormControl, FormGroup, Form, ListGroupItem, InputGroup } from 'react-bootstrap'
 import { useRecoilState } from 'recoil'
 import default_image from '../signal_lost.png'
 import { updateProp } from '../Helpers'
@@ -91,9 +91,7 @@ export function AdventureNode(props) {
 
     const image_name_text = node.raw_image ? "custom image data" : node.image
     return (
-        <Container fluid>
-            <Row>
-                <Col>
+        <CardGroup>
                     <Card>
                         <Card.Body>
                             <Card.Title>{node.name} <Button variant="danger" onClick={handleNodeDeletion}>Delete</Button></Card.Title>
@@ -132,8 +130,6 @@ export function AdventureNode(props) {
                                 handleEffectDeleted={deleted => deleteEffect("on_exit_effects", deleted)} />
                         </Card.Body>
                     </Card>
-                </Col>
-                <Col>
                     <Card>
                         <Card.Body>
                             <Card.Header>Choices</Card.Header>
@@ -153,8 +149,6 @@ export function AdventureNode(props) {
                             </ListGroup>
                         </Card.Body>
                     </Card>
-                </Col>
-            </Row>
-        </Container>
+            </CardGroup>
     )
 }

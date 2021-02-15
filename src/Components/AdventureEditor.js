@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useRef, useState} from 'react'
 import { Button, Col, Container, Row, Tab, Nav, FormControl, FormGroup, Form, } from 'react-bootstrap'
 import {useRecoilState} from 'recoil'
 import {AdventureState,NodesSelector,NodeData, unique_id} from './../State'
@@ -8,9 +8,32 @@ import {AdventureNode} from './AdventureNode'
 export function AdventureEditor() {
     const [adventure,setAdventure] = useRecoilState(AdventureState);
     const [nodes] = useRecoilState(NodesSelector)
+
+    const [activeTab,setActiveTab] = useState("")
    
-    const add_node = () => setAdventure(updateProp(adventure,"nodes",[...nodes,new NodeData()]))
-    const delete_node = (node) => setAdventure(updateProp(adventure,"nodes",nodes.filter(x => x !== node)))
+    const add_node = () => {
+      const modified_adventure = {...adventure,
+        nodes:[...nodes,new NodeData()]
+      }
+      const new_node = modified_adventure.nodes[0]
+      if(!modified_adventure.starting_node)
+      {
+        modified_adventure.starting_node = new_node.name
+        setAdventure(modified_adventure)
+        setActiveTab(new_node.id)
+      }
+      else{
+        setAdventure(modified_adventure)
+      }
+
+    }
+    const delete_node = (node) => {
+      const changed_nodes = nodes.filter(x => x !== node)
+      if(changed_nodes.length)
+        setActiveTab(changed_nodes[0].id)
+      setAdventure(updateProp(adventure,"nodes",changed_nodes))
+      
+    }
     
     const handleExport = () => {
       const data_object = {
@@ -50,9 +73,14 @@ export function AdventureEditor() {
       }
       reader.readAsText(e.target.files[0])
     }
+
+    const ImportInput = useRef()
+    const clickImport = () => {
+      ImportInput.current.click()
+    }
   
     return (
-    <Container fluid>
+    <Container fluid="xl">
       <Form>
         <FormGroup>
           <Form.Label>Adventure name</Form.Label>
@@ -65,7 +93,7 @@ export function AdventureEditor() {
           </FormControl>
         </FormGroup>
       </Form>
-      <Tab.Container id="nodes">
+      <Tab.Container id="nodes" activeKey={activeTab} onSelect={e => setActiveTab(e)}>
         <Row>
           <Col>
             <Nav variant="tabs">
@@ -93,14 +121,12 @@ export function AdventureEditor() {
       <Row>
         <Col>
           <Button onClick={handleExport}>Export</Button>
-          <Form.Group>
-            <Form.File 
-              label="Import"
-              onChange={handleImport}
-              accept=".json"
-              custom/>
-          </Form.Group>
-  
+          <Button onClick={clickImport}>Import</Button>
+          <Form.File
+            onChange={handleImport}
+            accept=".json"
+            ref={ImportInput}
+            style ={{display:"none"}}/>
         </Col>
       </Row>
     </Container>)

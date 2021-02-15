@@ -1,5 +1,6 @@
 import {ReqGroupData,ReqData} from '../State'
 import {InputGroup,Button,Card,ListGroup,FormControl,ButtonGroup} from 'react-bootstrap'
+import { useState } from 'react'
 
 export function RequirementsBuilder(props) {
     const handleRequirementsChanged = props.handleRequirementsChanged
@@ -54,6 +55,8 @@ export function RequirementsBuilder(props) {
         </ListGroup.Item>
       </ListGroup></>)
   }
+
+
   
   function SingleReq(props) {
     const handleReqDeleted = props.handleReqDeleted
@@ -83,7 +86,7 @@ export function RequirementsBuilder(props) {
   function ReqGroup(props) {
     const handleReqGroupDeleted = props.handleReqGroupDeleted
     const handleReqGroupChanged = props.handleReqGroupChanged
-  
+
     const addSubGroup = () => {
       const new_group = new ReqGroupData()
       const new_reqs = [...props.group.requirements, new_group]
@@ -109,7 +112,7 @@ export function RequirementsBuilder(props) {
     }
   
     return (
-      <Card>
+      <Card border="dark">
         <Card.Header>
           <InputGroup>
             <FormControl as="select" value={props.group.group_type} onChange={e => handleReqGroupChanged("group_type",e.target.value)}> 

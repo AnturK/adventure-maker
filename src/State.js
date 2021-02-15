@@ -12,7 +12,7 @@ export function unique_id(category) {
 export class AdventureData {
     constructor() {
         this.name = "New adventure"
-        this.starting_node = null
+        this.starting_node = ""
         this.nodes = []
         this.required_traits = []
         this.loot_types = []
