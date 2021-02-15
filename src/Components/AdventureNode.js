@@ -58,20 +58,21 @@ export function AdventureNode(props) {
     }
 
     const setUploadedImage = (e) => {
-        
         var reader = new FileReader()
         reader.onload = (e) => {
             var uploaded_image = new Image()
+            uploaded_image.onload = () =>{
+                if(uploaded_image.width !== 200 || uploaded_image.height !== 100){
+                    alert(`Adventure images need to be be 200x100 pngs.`)
+                    return
+                }
+                const modified_node = {...node,
+                    raw_image:e.target.result,
+                    image:null
+                }
+                setNode(modified_node)
+            }
             uploaded_image.src = e.target.result
-            if(uploaded_image.width !== 200 || uploaded_image.height !== 100){
-                alert("Adventure images need to be be 200x100 pngs.")
-                return
-            }
-            const modified_node = {...node,
-                raw_image:e.target.result,
-                image:null
-            }
-            setNode(modified_node)
         }
         reader.readAsDataURL(e.target.files[0])
     }

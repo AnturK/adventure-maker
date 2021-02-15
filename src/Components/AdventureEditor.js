@@ -52,7 +52,7 @@ export function AdventureEditor() {
     }
   
     return (
-    <Container>
+    <Container fluid>
       <Form>
         <FormGroup>
           <Form.Label>Adventure name</Form.Label>
