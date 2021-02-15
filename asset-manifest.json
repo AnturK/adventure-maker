@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/adventure-maker/static/css/main.8c8b27cf.chunk.css",
-    "main.js": "/adventure-maker/static/js/main.4e757e51.chunk.js",
-    "main.js.map": "/adventure-maker/static/js/main.4e757e51.chunk.js.map",
-    "runtime-main.js": "/adventure-maker/static/js/runtime-main.4589a989.js",
-    "runtime-main.js.map": "/adventure-maker/static/js/runtime-main.4589a989.js.map",
+    "main.js": "/adventure-maker/static/js/main.f2dfc70a.chunk.js",
+    "main.js.map": "/adventure-maker/static/js/main.f2dfc70a.chunk.js.map",
+    "runtime-main.js": "/adventure-maker/static/js/runtime-main.1d26b9b6.js",
+    "runtime-main.js.map": "/adventure-maker/static/js/runtime-main.1d26b9b6.js.map",
     "static/css/2.658248ec.chunk.css": "/adventure-maker/static/css/2.658248ec.chunk.css",
-    "static/js/2.ca26cce4.chunk.js": "/adventure-maker/static/js/2.ca26cce4.chunk.js",
-    "static/js/2.ca26cce4.chunk.js.map": "/adventure-maker/static/js/2.ca26cce4.chunk.js.map",
-    "static/js/3.33494e38.chunk.js": "/adventure-maker/static/js/3.33494e38.chunk.js",
-    "static/js/3.33494e38.chunk.js.map": "/adventure-maker/static/js/3.33494e38.chunk.js.map",
+    "static/js/2.8b09011e.chunk.js": "/adventure-maker/static/js/2.8b09011e.chunk.js",
+    "static/js/2.8b09011e.chunk.js.map": "/adventure-maker/static/js/2.8b09011e.chunk.js.map",
+    "static/js/3.0956b3f6.chunk.js": "/adventure-maker/static/js/3.0956b3f6.chunk.js",
+    "static/js/3.0956b3f6.chunk.js.map": "/adventure-maker/static/js/3.0956b3f6.chunk.js.map",
     "index.html": "/adventure-maker/index.html",
     "static/css/2.658248ec.chunk.css.map": "/adventure-maker/static/css/2.658248ec.chunk.css.map",
     "static/css/main.8c8b27cf.chunk.css.map": "/adventure-maker/static/css/main.8c8b27cf.chunk.css.map",
-    "static/js/2.ca26cce4.chunk.js.LICENSE.txt": "/adventure-maker/static/js/2.ca26cce4.chunk.js.LICENSE.txt"
+    "static/js/2.8b09011e.chunk.js.LICENSE.txt": "/adventure-maker/static/js/2.8b09011e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.4589a989.js",
+    "static/js/runtime-main.1d26b9b6.js",
     "static/css/2.658248ec.chunk.css",
-    "static/js/2.ca26cce4.chunk.js",
+    "static/js/2.8b09011e.chunk.js",
     "static/css/main.8c8b27cf.chunk.css",
-    "static/js/main.4e757e51.chunk.js"
+    "static/js/main.f2dfc70a.chunk.js"
   ]
 }
