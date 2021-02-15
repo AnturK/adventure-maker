@@ -12,11 +12,12 @@
     "react-bootstrap": "^1.4.3",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.2",
+    "recoil": "^0.1.2",
     "web-vitals": "^1.1.0"
   },
   "homepage": "https://AnturK.github.io/adventure-maker",
   "scripts": {
-    "predeploy":"npm run build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",

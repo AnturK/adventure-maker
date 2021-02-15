@@ -47,7 +47,7 @@
 					"exit_node": "spooky_win",
 					"requirements": [
 						{
-							"group_type": "req_all",
+							"group_type": "AND",
 							"requirements": [
 								{
 									"quality": "a",
@@ -67,7 +67,7 @@
 							"value": "whatever"
 						},
 						{
-							"group_type": "req_one",
+							"group_type": "OR",
 							"requirements": [
 								{
 									"quality": "c",
