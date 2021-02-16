@@ -1,6 +1,5 @@
 import {ReqGroupData,ReqData} from '../State'
 import {InputGroup,Button,Card,ListGroup,FormControl,ButtonGroup} from 'react-bootstrap'
-import { useState } from 'react'
 
 export function RequirementsBuilder(props) {
     const handleRequirementsChanged = props.handleRequirementsChanged

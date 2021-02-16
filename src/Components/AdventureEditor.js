@@ -1,13 +1,15 @@
-import React,{useRef, useState} from 'react'
-import { Button, Col, Container, Row, Tab, Nav, FormControl, FormGroup, Form, } from 'react-bootstrap'
+import React,{useEffect, useRef, useState} from 'react'
+import { Button, Col, Container, Row, Tab, Nav, FormControl, FormGroup, Form, Card, ListGroup, } from 'react-bootstrap'
 import {useRecoilState} from 'recoil'
-import {AdventureState,NodesSelector,NodeData, unique_id} from './../State'
+import {AdventureState,NodesSelector,NodeData,TriggersSelector,TriggerData, unique_id} from './../State'
 import {updateProp} from './../Helpers'
 import {AdventureNode} from './AdventureNode'
+import {AdventureTrigger} from './AdventureTrigger'
 
 export function AdventureEditor() {
     const [adventure,setAdventure] = useRecoilState(AdventureState);
     const [nodes] = useRecoilState(NodesSelector)
+    const [triggers] = useRecoilState(TriggersSelector)
 
     const [activeTab,setActiveTab] = useState("")
    
@@ -15,25 +17,35 @@ export function AdventureEditor() {
       const modified_adventure = {...adventure,
         nodes:[...nodes,new NodeData()]
       }
-      const new_node = modified_adventure.nodes[0]
-      if(!modified_adventure.starting_node)
-      {
-        modified_adventure.starting_node = new_node.name
-        setAdventure(modified_adventure)
-        setActiveTab(new_node.id)
-      }
-      else{
-        setAdventure(modified_adventure)
-      }
-
+      setAdventure(modified_adventure)
     }
     const delete_node = (node) => {
       const changed_nodes = nodes.filter(x => x !== node)
-      if(changed_nodes.length)
-        setActiveTab(changed_nodes[0].id)
       setAdventure(updateProp(adventure,"nodes",changed_nodes))
+    }
+
+    useEffect(() => {
+      if(nodes.length && !adventure.starting_node){
+        setAdventure(updateProp(adventure,"starting_node",nodes[0].name))
+      }
+      if(nodes.length && (!activeTab || !nodes.find(x => x.id === activeTab))){
+        setActiveTab(nodes[0].id)
+      }
+    },[nodes,activeTab,adventure,setAdventure])
+
+    const add_trigger = () => {
+      const modified_adventure = {...adventure,
+        triggers:[...triggers,new TriggerData()]
+      }
+      setAdventure(modified_adventure)
+
+    }
+    const delete_trigger = (trigger) => {
+      const changed_triggers = triggers.filter(x => x !== trigger)
+      setAdventure(updateProp(adventure,"triggers",changed_triggers))
       
     }
+
     
     const handleExport = () => {
       const data_object = {
@@ -67,6 +79,7 @@ export function AdventureEditor() {
         const modified_adventure = {...adventure,
           name:result.adventure_name,
           starting_node:result.starting_node,
+          triggers:result.triggers,
           nodes:result.nodes
         }
         setAdventure(modified_adventure)
@@ -77,6 +90,32 @@ export function AdventureEditor() {
     const ImportInput = useRef()
     const clickImport = () => {
       ImportInput.current.click()
+    }
+
+    const [draggedItem,setDraggedItem] = useState(null)
+
+    const start_dragging = (e,node) => {
+      setDraggedItem(node)
+    } 
+
+    const end_dragging = (e,node) => {
+      setDraggedItem(null)
+    }
+
+    const switch_node = (node) => {
+      if(draggedItem != null){
+        const index_a = nodes.indexOf(node)
+        const index_b = nodes.indexOf(draggedItem)
+        const modified_nodes = nodes.slice();
+        [modified_nodes[index_a],modified_nodes[index_b]] = [modified_nodes[index_b],modified_nodes[index_a]]
+        setAdventure(updateProp(adventure,"nodes",modified_nodes))
+      }
+    }
+
+    const validate_drop = (e,node) => {
+      if(draggedItem != null && node !== draggedItem){
+        e.preventDefault()
+      }
     }
   
     return (
@@ -97,7 +136,17 @@ export function AdventureEditor() {
         <Row>
           <Col>
             <Nav variant="tabs">
-              {nodes.map(node => (<Nav.Item key={node.id}><Nav.Link eventKey={node.id}>{node.name}</Nav.Link></Nav.Item>))}
+              {nodes.map(node => (
+                <Nav.Item 
+                  key={node.id} 
+                  draggable 
+                  onDragEnd={e => end_dragging(e,node)} 
+                  onDragStart={e => start_dragging(e,node)} 
+                  onDrop={e => switch_node(node)}
+                  onDragOver={e => validate_drop(e,node)}
+                  >
+                  <Nav.Link eventKey={node.id}>{node.name}</Nav.Link>
+                </Nav.Item>))}
               <Nav.Item>
                 <Nav.Link onClick={add_node}>Add Node</Nav.Link>
               </Nav.Item>
@@ -118,6 +167,25 @@ export function AdventureEditor() {
           </Col>
         </Row>
       </Tab.Container>
+      <Row>
+        <Container class="border border-primary">
+          <Col>
+          <Row>
+            Triggers
+          </Row>
+          <Row>
+            <ListGroup>
+              {triggers.map(trigger => (
+                <AdventureTrigger trigger={trigger} handleDeletion={() => delete_trigger(trigger)}/>
+              ))}
+            <ListGroup.Item>
+              <Button onClick={add_trigger}>Add Trigger</Button>
+            </ListGroup.Item>
+            </ListGroup>
+          </Row>
+          </Col>
+        </Container>
+      </Row>
       <Row>
         <Col>
           <Button onClick={handleExport}>Export</Button>
