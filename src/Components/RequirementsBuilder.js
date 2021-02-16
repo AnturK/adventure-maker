@@ -1,5 +1,6 @@
 import {ReqGroupData,ReqData} from '../State'
 import {InputGroup,Button,Card,ListGroup,FormControl,ButtonGroup} from 'react-bootstrap'
+import {convertNumberValue} from '../Helpers'
 
 export function RequirementsBuilder(props) {
     const handleRequirementsChanged = props.handleRequirementsChanged
@@ -74,7 +75,7 @@ export function RequirementsBuilder(props) {
           <option>&gt;=</option>
           <option>&lt;=</option>
         </FormControl>
-        <FormControl value={props.requirement.value} onChange={e => handleReqChanged("value", e.target.value)}/>
+        <FormControl value={props.requirement.value} onChange={e => handleReqChanged("value", convertNumberValue(e.target.value))}/>
         <InputGroup.Append>
           <Button variant="danger" onClick={() => handleReqDeleted(props.requirement)}>Delete</Button>
         </InputGroup.Append>

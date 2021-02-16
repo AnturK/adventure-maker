@@ -1,5 +1,6 @@
 import { Button, Card, ListGroup, FormControl, ListGroupItem, InputGroup } from 'react-bootstrap'
 import { EffectData } from './../State'
+import { convertNumberValue} from '../Helpers'
 
 function Effect(props) {
     const handleChange = props.handleChange
@@ -30,13 +31,13 @@ function Effect(props) {
                 return (
                     <>
                         <InputGroup.Text>Random</InputGroup.Text>
-                        <FormControl value={props.effect.value.low} onChange={e => handleChange("value", {...props.effect.value,low:e.target.value})} />
+                        <FormControl value={props.effect.value.low} onChange={e => handleChange("value", {...props.effect.value,low:convertNumberValue(e.target.value)})} />
                         <InputGroup.Text>To</InputGroup.Text>
-                        <FormControl value={props.effect.value.high} onChange={e => handleChange("value",{...props.effect.value,high:e.target.value})} />
+                        <FormControl value={props.effect.value.high} onChange={e => handleChange("value",{...props.effect.value,high:convertNumberValue(e.target.value)})} />
                     </>
                 )
             case "raw":
-                return (<FormControl value={props.effect.value} onChange={e => handleChange("value", e.target.value)} />)
+                return (<FormControl value={props.effect.value} onChange={e => handleChange("value", convertNumberValue(e.target.value))} />)
             default:
                 return (<InputGroup.Text>Unsupported</InputGroup.Text>)
         }

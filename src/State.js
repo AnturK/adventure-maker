@@ -5,7 +5,7 @@ import {replaceItemInArray} from './Helpers'
 export const global_ids = {};
 export function unique_id(category) {
     category in global_ids ? global_ids[category] += 1 : global_ids[category] = 0
-    return global_ids[category]
+    return `${category} ${global_ids[category]}`
 }
 
 //Data classes
@@ -23,8 +23,8 @@ export class AdventureData {
 
 export class NodeData {
     constructor() {
-        this.id = unique_id("node")
-        this.name = "Node " + this.id
+        this.id = unique_id("Node")
+        this.name = this.id
         this.description = "Node description goes here"
         this.choices = []
         this.image = "default"
@@ -46,10 +46,13 @@ export class TriggerData{
 export class ChoiceData {
     constructor() {
         this.id = unique_id("choice")
+        this.key = this.id
         this.name = "New Choice"
         this.exit_node = "FAIL"
         this.on_selection_effects = undefined
         this.requirements = undefined
+        this.delay = 0
+        this.delay_message = undefined
     }
 }
 

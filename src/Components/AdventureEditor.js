@@ -12,6 +12,7 @@ export function AdventureEditor() {
     const [triggers] = useRecoilState(TriggersSelector)
 
     const [activeTab,setActiveTab] = useState("")
+    const [draggedItem,setDraggedItem] = useState(null)
    
     const add_node = () => {
       const modified_adventure = {...adventure,
@@ -25,11 +26,11 @@ export function AdventureEditor() {
     }
 
     useEffect(() => {
-      if(nodes.length && !adventure.starting_node){
+      if(nodes.length && (!adventure.starting_node || !nodes.find(x => x.name === adventure.starting_node))){
         setAdventure(updateProp(adventure,"starting_node",nodes[0].name))
       }
       if(nodes.length && (!activeTab || !nodes.find(x => x.id === activeTab))){
-        setActiveTab(nodes[0].id)
+        setActiveTab(nodes[0].id.toString())
       }
     },[nodes,activeTab,adventure,setAdventure])
 
@@ -91,8 +92,6 @@ export function AdventureEditor() {
     const clickImport = () => {
       ImportInput.current.click()
     }
-
-    const [draggedItem,setDraggedItem] = useState(null)
 
     const start_dragging = (e,node) => {
       setDraggedItem(node)
@@ -168,7 +167,7 @@ export function AdventureEditor() {
         </Row>
       </Tab.Container>
       <Row>
-        <Container class="border border-primary">
+        <Container>
           <Col>
           <Row>
             Triggers

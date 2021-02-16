@@ -4,6 +4,7 @@ import {useRecoilValue} from 'recoil'
 import {NodesSelector} from './../State'
 import {EffectBuilder} from './EffectBuilder'
 import {RequirementsBuilder} from './RequirementsBuilder'
+import {convertNumberValue} from '../Helpers'
 
 export function AdventureChoice(props) {
     const handleChoiceDeletion = props.handleChoiceDeletion
@@ -75,6 +76,14 @@ export function AdventureChoice(props) {
               <option>WIN</option>
               {nodes.map(node => (<option key={node.id}>{node.name}</option>))}
             </FormControl>
+          </InputGroup>
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text>Delay(ds)</InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl value={props.choice.delay} onChange={(e) => handleChoiceChange("delay", convertNumberValue(e.target.value))} />
+            <InputGroup.Text>Message</InputGroup.Text>
+            <FormControl value={props.choice.delay_message} onChange={(e) => handleChoiceChange("delay_message", e.target.value)} />
           </InputGroup>
           <EffectBuilder
               title="Selection Effects"
