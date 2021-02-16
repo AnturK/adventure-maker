@@ -39,7 +39,7 @@
 							"effect_type": "set",
 							"quality": "unused",
 							"value": {
-								"random": 1,
+								"value_type": "random",
 								"low": 1,
 								"high": 5
 							}

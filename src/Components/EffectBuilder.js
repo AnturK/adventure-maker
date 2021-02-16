@@ -4,6 +4,43 @@ import { EffectData } from './../State'
 function Effect(props) {
     const handleChange = props.handleChange
     const handleDelete = props.handleDelete
+    const value_type = props.effect.value === Object(props.effect.value) ? props.effect.value["value_type"] : "raw"
+
+    const defaultForValueType = value_type => {
+        switch(value_type){
+            case "raw":
+                return 0
+            case "random":
+               return { "value_type": "random", "low": 0, "high": 0 }
+            default:
+                return 0
+        }
+    }
+
+    const toggleSpecialValueType = e => {
+        const allowed_types = ["raw","random"]
+        const current_index = allowed_types.indexOf(value_type)
+        const new_type = allowed_types[(current_index+1)%allowed_types.length]
+        handleChange("value",defaultForValueType(new_type))
+    }
+
+    const value_type_controls = value_type => {
+        switch (value_type) {
+            case "random":
+                return (
+                    <>
+                        <InputGroup.Text>Random</InputGroup.Text>
+                        <FormControl value={props.effect.value.low} onChange={e => handleChange("value", {...props.effect.value,low:e.target.value})} />
+                        <InputGroup.Text>To</InputGroup.Text>
+                        <FormControl value={props.effect.value.high} onChange={e => handleChange("value",{...props.effect.value,high:e.target.value})} />
+                    </>
+                )
+            case "raw":
+                return (<FormControl value={props.effect.value} onChange={e => handleChange("value", e.target.value)} />)
+            default:
+                return (<InputGroup.Text>Unsupported</InputGroup.Text>)
+        }
+    }
 
     return (
         <InputGroup>
@@ -19,8 +56,10 @@ function Effect(props) {
             <InputGroup.Prepend>
                 <InputGroup.Text>Value</InputGroup.Text>
             </InputGroup.Prepend>
-            <FormControl value={props.effect.value} onChange={e => handleChange("value", e.target.value)} />
+            {value_type_controls(value_type)}
+
             <InputGroup.Append>
+                <Button onClick={toggleSpecialValueType}>*</Button>
                 <Button variant="danger" onClick={handleDelete}>Delete</Button>
             </InputGroup.Append>
         </InputGroup>)
