@@ -41,6 +41,7 @@ export class TriggerData{
         this.name = "Trigger"
         this.target_node = undefined
         this.on_trigger_effects = undefined
+        this.requirements = undefined
     }
 }
 

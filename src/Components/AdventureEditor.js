@@ -48,9 +48,10 @@ export function AdventureEditor() {
         adventure_name: adventure.name,
         starting_node: startingNode,
         starting_qualities: adventure.starting_qualities,
-        band_modifiers: adventure.band_modifiers,
+        required_site_traits: adventure.required_site_traits,
         loot_categories : adventure.loot_types,
         scan_band_mods : adventure.band_modifiers,
+        triggers : adventure.triggers,
         nodes: nodes
       }
       //Internal stuff, byond doesn't care about this
@@ -61,26 +62,78 @@ export function AdventureEditor() {
       }
       const blob = new Blob([JSON.stringify(data_object, remove_ids)], { type: 'application/json' })
       const blob_url = URL.createObjectURL(blob)
-      window.open(blob_url)
+      
+      ExportLink.current.href = blob_url
+      ExportLink.current.download = `${adventure.name}.json`
+      ExportLink.current.click();
+    }
+
+    const regenerate_reqs = req_list => {
+      for(var req of req_list){
+        req.id = unique_id("req")
+        if(req.group_type !== undefined){
+          if(req.requirements !== undefined)
+            regenerate_reqs(req.requirements)
+        }
+      }
+    }
+
+    const regenerate_effects = effects => {
+      for(var effect of effects){
+        effect.id = unique_id("effect")
+      }
+    }
+    /// Regenerates temporary ids
+    const regenerate_ids = node_list =>{
+      for(var node of node_list){
+        node.id = unique_id("Node")
+        for(var choice of node.choices){
+          choice.id = unique_id("choice")
+          if(choice.on_selection_effects !== undefined){
+            regenerate_effects(choice.on_selection_effects)
+          }
+          if(choice.requirements !== undefined){
+            regenerate_reqs(choice.requirements)
+          }
+        }
+        if(node.on_enter_effects !== undefined)
+          regenerate_effects(node.on_enter_effects)
+        if(node.on_exit_effects !== undefined)
+          regenerate_effects(node.on_exit_effects)
+      }
+      return node_list
+    }
+
+    const regenerate_trigger_ids = trigger_list => {
+      for(var trigger of trigger_list){
+        trigger.id = unique_id("trigger")
+        if(trigger.requirements !== undefined){
+          regenerate_reqs(trigger.requirements)
+        }
+        if(trigger.on_trigger_effects !== undefined){
+          regenerate_effects(trigger.on_trigger_effects)
+        }
+      }
+      return trigger_list
     }
   
     const handleImport = e => {
       var reader = new FileReader()
       reader.onload = (e) =>{
-        const generate_ids = (key,value) => {
-          if(value === Object(value)) //Thanks StackOverflow
-          {
-            value.id = unique_id("import")
-          }
-          return value
-        }
-        const result = JSON.parse(e.target.result,generate_ids)
-  
+        const result = JSON.parse(e.target.result)
+
+        const reindexed_nodes = regenerate_ids(result.nodes)
+        const reindexed_triggers = regenerate_trigger_ids(result.triggers)
+
         const modified_adventure = {...adventure,
           name:result.adventure_name,
           starting_node:result.starting_node,
-          triggers:result.triggers,
-          nodes:result.nodes
+          starting_qualities:result.starting_qualities,
+          required_site_traits:result.required_site_traits,
+          band_modifiers:result.scan_band_mods,
+          loot_types:result.loot_categories,
+          triggers:reindexed_triggers,
+          nodes:reindexed_nodes
         }
         setAdventure(modified_adventure)
       }
@@ -91,6 +144,8 @@ export function AdventureEditor() {
     const clickImport = () => {
       ImportInput.current.click()
     }
+
+    const ExportLink = useRef()
 
     const start_dragging = (e,node) => {
       setDraggedItem(node)
@@ -145,6 +200,7 @@ export function AdventureEditor() {
         <Col>
         <ButtonGroup>
             <Button onClick={handleExport}>Export</Button>
+            <a ref={ExportLink} style={{display:"none"}} href="/">God is this really how JS supposed to work</a>
             <Button onClick={clickImport}>Import</Button>
             <Form.File
               onChange={handleImport}
@@ -169,19 +225,19 @@ export function AdventureEditor() {
               </FormGroup>
               <FormGroup>
                 <Form.Label>Starting qualities</Form.Label>
-                <KeyValueList value={adventure.starting_qualities} onChange={new_value => setAdventure(updateProp(adventure,"starting_qualities",new_value))}/>
+                <KeyValueList adventureProp="starting_qualities"/>
               </FormGroup>
               <FormGroup>
                 <Form.Label>Required site traits</Form.Label>
-                <SimpleList presetValues={site_traits} value={adventure.required_site_traits} onChange={new_value => setAdventure(updateProp(adventure,"required_site_traits",new_value))}/>
+                <SimpleList presetValues={site_traits} adventureProp="required_site_traits"/>
               </FormGroup>
               <FormGroup>
                 <Form.Label>Loot type</Form.Label>
-                <SimpleList presetValues={loot_types} value={adventure.loot_types} onChange={new_value => setAdventure(updateProp(adventure,"loot_types",new_value))}/>
+                <SimpleList presetValues={loot_types} adventureProp="loot_types"/>
               </FormGroup>
               <FormGroup>
                 <Form.Label>Scanning modifiers</Form.Label>
-                <KeyValueList presetKeys={scan_bands} value={adventure.band_modifiers} onChange={new_value => setAdventure(updateProp(adventure,"band_modifiers",new_value))}/>
+                <KeyValueList presetKeys={scan_bands} adventureProp="band_modifiers"/>
               </FormGroup>
             </Form>
         </BasicCollapsible>

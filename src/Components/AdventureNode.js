@@ -137,6 +137,7 @@ export function AdventureNode(props) {
                             <Card.Title>Choices</Card.Title>
                                 {node.choices.map(choice => (
                                         <AdventureChoice
+                                            key={choice.id}
                                             choice={choice}
                                             handleChoiceDeletion={() => removeChoice(choice)}
                                             handleChoiceChange={(choice_property, new_value) => {

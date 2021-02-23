@@ -1,8 +1,9 @@
 import React,{useState} from 'react'
 import { Card, FormControl, Row,Container,Col, InputGroup,Button, FormGroup,Table } from 'react-bootstrap'
 import {useRecoilState} from 'recoil'
-import {NodesSelector} from '../State'
+import {AdventureState, NodesSelector} from '../State'
 import {special_nodes} from '../ExternalDefines'
+import {convertNumberValue,updateProp} from '../Helpers'
 
 export function BasicCollapsible(props){
     const [sectionCollapsed,setSectionCollapsed] = useState(props.startCollapsed)
@@ -39,33 +40,33 @@ export function NodeSelectionDropdown(props){
         return (<FormControl {...rest} as="select">
             {nodes.map(node => (<option key={node.id}>{node.name}</option>))}
             {!!allowNone && (<option value="">None</option>)}
-            {!!allowCustom && (special_nodes.map(name => (<option>{name}</option>)))}
+            {!!allowCustom && (special_nodes.map(name => (<option key={name}>{name}</option>)))}
         </FormControl>)
 }
 
 export function KeyValueList(props){
     const {
         presetKeys,
-        value,
-        onChange = () => {}    } = props;
-    const [store,setStore] = useState(value)
+        adventureProp,
+    } = props;
+
+    const [adventure,setAdventure] = useRecoilState(AdventureState)
+    
+    const store = adventure[adventureProp]
     const [newKey,setNewKey] = useState(presetKeys ? presetKeys[0] : "")
     const [newValue,setNewValue] = useState("")
     const store_keys = Object.keys(store)
 
     const add_new_kv_pair = () => {
         const newstore = {...store,[newKey]:newValue}
-        setStore(newstore)
-        onChange(newstore)
+        setAdventure(updateProp(adventure,adventureProp,newstore))
     }
 
     const remove_key = key => {
         const newstore = {...store}
         delete newstore[key]
-        setStore(newstore)
-        onChange(newstore)
+        setAdventure(updateProp(adventure,adventureProp,newstore))
     }
-
     return (<Table size="sm">
                 <thead>
                     <tr>
@@ -84,7 +85,7 @@ export function KeyValueList(props){
                 ))}
                 <tr>
                     <td>{presetKeys ? (<FormControl as="select" value={newKey} onChange={e => setNewKey(e.target.value)} >{presetKeys.map(pk => (<option key={pk}>{pk}</option>))}</FormControl>) : (<FormControl value={newKey} onChange={e => setNewKey(e.target.value)}></FormControl>)}</td>
-                    <td><FormControl value={newValue} onChange={e => setNewValue(e.target.value)}></FormControl></td>
+                    <td><FormControl value={newValue} onChange={e => setNewValue(convertNumberValue(e.target.value))}></FormControl></td>
                     <td><Button onClick={add_new_kv_pair}>Add</Button></td>
                 </tr>
                 </tbody>
@@ -95,24 +96,24 @@ export function KeyValueList(props){
 export function SimpleList(props){
     const {
         presetValues,
-        value,
-        onChange = () => {},
-        unique= true    } = props;
-    const [store,setStore] = useState(value)
+        adventureProp,
+        unique= true
+    } = props;
+
+    const [adventure,setAdventure] = useRecoilState(AdventureState)
+    const store = adventure[adventureProp] || []
     const [newValue,setNewValue] = useState(presetValues ? presetValues[0] : "")
 
     const add_new_value = () => {
         if(unique && store.indexOf(newValue) >= 0)
             return
         const newstore = [...store,newValue]
-        setStore(newstore)
-        onChange(newstore)
+        setAdventure(updateProp(adventure,adventureProp,newstore))
     }
 
     const remove_value = key => {
         const newstore = store.filter(x => x !== key)
-        setStore(newstore)
-        onChange(newstore)
+        setAdventure(updateProp(adventure,adventureProp,newstore))
     }
 
     return (<FormGroup>
@@ -126,7 +127,7 @@ export function SimpleList(props){
             ))}
             <InputGroup>
                 <InputGroup.Prepend>
-                    {presetValues ? (<FormControl as="select" value={newValue} onChange={e => setNewValue(e.target.value)} >{presetValues.map(pk => (<option key={pk}>{pk}</option>))}</FormControl>) : (<FormControl value={newValue} onChange={e => setNewValue(e.target.value)}></FormControl>)}
+                    {presetValues ? (<FormControl as="select" value={newValue} onChange={e => setNewValue(convertNumberValue(e.target.value))} >{presetValues.map(pk => (<option key={pk}>{pk}</option>))}</FormControl>) : (<FormControl value={newValue} onChange={e => setNewValue(convertNumberValue(e.target.value))}></FormControl>)}
                 </InputGroup.Prepend>
                 <InputGroup.Append>
                     <Button onClick={add_new_value}>Add</Button>

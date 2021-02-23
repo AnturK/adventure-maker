@@ -7,7 +7,7 @@ export const special_nodes = ["FAIL","WIN","GO_BACK"]
 
 export const site_traits = ["ruins","technology present","space station","alien","habitable","in vacuum","in space","on surface"]
 
-export const scan_bands = ["Plasma absorbption band","Hydrocarbons/Molecular oxygen","Narrow-band radio waves","Exotic Radiation","Increased Density"]
+export const scan_bands = ["Plasma absorption band","Hydrocarbons/Molecular oxygen","Narrow-band radio waves","Exotic Radiation","Increased Density"]
 
 export const loot_types = ["maint","drugs","research","weapons","pets","unique"]
 
@@ -17,4 +17,15 @@ export const preset_images = {
     grue : grue,
     signal_lost : signal_lost,
     trader : trader
+}
+
+export const EffectTypes = {
+    Add : "Add",
+    Set : "Set",
+    Remove : "Remove",
+}
+
+export const ValueTypes = {
+    raw : "raw",
+    random : "random"
 }

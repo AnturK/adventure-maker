@@ -1,6 +1,7 @@
 import { Button, Card, ListGroup, FormControl, ListGroupItem, InputGroup } from 'react-bootstrap'
 import { EffectData } from './../State'
 import { convertNumberValue} from '../Helpers'
+import { ValueTypes,EffectTypes } from '../ExternalDefines'
 
 function Effect(props) {
     const handleChange = props.handleChange
@@ -9,17 +10,17 @@ function Effect(props) {
 
     const defaultForValueType = value_type => {
         switch(value_type){
-            case "raw":
+            case ValueTypes.raw:
                 return 0
-            case "random":
-               return { "value_type": "random", "low": 0, "high": 0 }
+            case ValueTypes.random:
+               return { "value_type": ValueTypes.random, "low": 0, "high": 0 }
             default:
                 return 0
         }
     }
 
     const toggleSpecialValueType = e => {
-        const allowed_types = ["raw","random"]
+        const allowed_types = Object.keys(ValueTypes).map(k => ValueTypes[k])
         const current_index = allowed_types.indexOf(value_type)
         const new_type = allowed_types[(current_index+1)%allowed_types.length]
         handleChange("value",defaultForValueType(new_type))
@@ -46,9 +47,7 @@ function Effect(props) {
     return (
         <InputGroup>
             <FormControl as="select" value={props.effect.effect_type} onChange={e => handleChange("effect_type", e.target.value)}>
-                <option>add</option>
-                <option>remove</option>
-                <option>set</option>
+                {Object.keys(EffectTypes).map(k => (<option key={k}>{EffectTypes[k]}</option>))}
             </FormControl>
             <InputGroup.Prepend>
                 <InputGroup.Text>Quality</InputGroup.Text>
