@@ -1,10 +1,9 @@
 import React,{useState} from 'react'
 import {Button, Card, InputGroup, FormControl } from 'react-bootstrap'
-import {useRecoilValue} from 'recoil'
-import {NodesSelector} from './../State'
 import {EffectBuilder} from './EffectBuilder'
 import {RequirementsBuilder} from './RequirementsBuilder'
 import {convertNumberValue} from '../Helpers'
+import { NodeSelectionDropdown } from './Utility'
 
 export function AdventureChoice(props) {
     const handleChoiceDeletion = props.handleChoiceDeletion
@@ -45,8 +44,6 @@ export function AdventureChoice(props) {
       new_reqs[props.choice.requirements.indexOf(old_req)] = changed_req
       handleChoiceChange("requirements", new_reqs)
     }
-  
-    const nodes = useRecoilValue(NodesSelector)
     const [exitNodeSelectValue, setExitNodeSelectValue] = useState(props.choice.exit_node);
   
     const changeExitNode = (e) => {
@@ -71,11 +68,7 @@ export function AdventureChoice(props) {
             <InputGroup.Prepend>
               <InputGroup.Text>Exit Node</InputGroup.Text>
             </InputGroup.Prepend>
-            <FormControl as="select" value={exitNodeSelectValue} onChange={changeExitNode}>
-              <option>FAIL</option>
-              <option>WIN</option>
-              {nodes.map(node => (<option key={node.id}>{node.name}</option>))}
-            </FormControl>
+            <NodeSelectionDropdown value={exitNodeSelectValue} onChange={changeExitNode} allowNone={false}/>
           </InputGroup>
           <InputGroup>
             <InputGroup.Prepend>

@@ -1,10 +1,14 @@
-import React,{useEffect, useRef, useState} from 'react'
-import { Button, Col, Container, Row, Tab, Nav, FormControl, FormGroup, Form, Card, ListGroup, } from 'react-bootstrap'
+import React,{useRef, useState} from 'react'
+import { Button, Col, Container, Row, Tab, Nav, FormControl, FormGroup, Form, ButtonGroup,Modal } from 'react-bootstrap'
 import {useRecoilState} from 'recoil'
 import {AdventureState,NodesSelector,NodeData,TriggersSelector,TriggerData, unique_id} from './../State'
 import {updateProp} from './../Helpers'
 import {AdventureNode} from './AdventureNode'
 import {AdventureTrigger} from './AdventureTrigger'
+import {BasicCollapsible,NodeSelectionDropdown, KeyValueList, SimpleList} from './Utility'
+import {scan_bands, loot_types, site_traits} from '../ExternalDefines'
+import { AdventurePlayer } from './AdventurePlayer'
+
 
 export function AdventureEditor() {
     const [adventure,setAdventure] = useRecoilState(AdventureState);
@@ -25,15 +29,6 @@ export function AdventureEditor() {
       setAdventure(updateProp(adventure,"nodes",changed_nodes))
     }
 
-    useEffect(() => {
-      if(nodes.length && (!adventure.starting_node || !nodes.find(x => x.name === adventure.starting_node))){
-        setAdventure(updateProp(adventure,"starting_node",nodes[0].name))
-      }
-      if(nodes.length && (!activeTab || !nodes.find(x => x.id === activeTab))){
-        setActiveTab(nodes[0].id.toString())
-      }
-    },[nodes,activeTab,adventure,setAdventure])
-
     const add_trigger = () => {
       const modified_adventure = {...adventure,
         triggers:[...triggers,new TriggerData()]
@@ -51,7 +46,11 @@ export function AdventureEditor() {
     const handleExport = () => {
       const data_object = {
         adventure_name: adventure.name,
-        starting_node: adventure.starting_node,
+        starting_node: startingNode,
+        starting_qualities: adventure.starting_qualities,
+        band_modifiers: adventure.band_modifiers,
+        loot_categories : adventure.loot_types,
+        scan_band_mods : adventure.band_modifiers,
         nodes: nodes
       }
       //Internal stuff, byond doesn't care about this
@@ -97,7 +96,7 @@ export function AdventureEditor() {
       setDraggedItem(node)
     } 
 
-    const end_dragging = (e,node) => {
+    const end_dragging = () => {
       setDraggedItem(null)
     }
 
@@ -116,85 +115,134 @@ export function AdventureEditor() {
         e.preventDefault()
       }
     }
-  
+
+    const getDefaultTab = () => {
+      if(nodes.length)
+        return nodes[0].id.toString()
+    }
+    const openTab = activeTab || getDefaultTab()
+    
+    const getDefaultStartingNode = () => {
+      if(nodes.length)
+        return nodes[0].name
+    }
+    const startingNode = adventure.starting_node || getDefaultStartingNode()
+
+
+    const [playing,setPlaying] = useState(false)
+
+    const toggle_playing = () => {
+      setPlaying(!playing)
+    }
+
     return (
-    <Container fluid="xl">
-      <Form>
-        <FormGroup>
-          <Form.Label>Adventure name</Form.Label>
-          <FormControl placeholder="New adventure" value={adventure.name} onChange={(e) => setAdventure(updateProp(adventure,"name",e.target.value))} />
-        </FormGroup>
-        <FormGroup>
-          <Form.Label>Starting node</Form.Label>
-          <FormControl as="select" value={adventure.starting_node} onChange={(e) => setAdventure(updateProp(adventure,"starting_node",e.target.value))}>
-            {nodes.map(node => (<option key={node.id}>{node.name}</option>))}
-          </FormControl>
-        </FormGroup>
-      </Form>
-      <Tab.Container id="nodes" activeKey={activeTab} onSelect={e => setActiveTab(e)}>
-        <Row>
-          <Col>
-            <Nav variant="tabs">
-              {nodes.map(node => (
-                <Nav.Item 
-                  key={node.id} 
-                  draggable 
-                  onDragEnd={e => end_dragging(e,node)} 
-                  onDragStart={e => start_dragging(e,node)} 
-                  onDrop={e => switch_node(node)}
-                  onDragOver={e => validate_drop(e,node)}
-                  >
-                  <Nav.Link eventKey={node.id}>{node.name}</Nav.Link>
-                </Nav.Item>))}
-              <Nav.Item>
-                <Nav.Link onClick={add_node}>Add Node</Nav.Link>
-              </Nav.Item>
-            </Nav>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Tab.Content>
-                {nodes.map(node => (
-                  <Tab.Pane eventKey={node.id} key={node.id}>
-                    <AdventureNode 
-                      node={node}
-                      handleNodeDeletion={() => delete_node(node)}
-                      />
-                  </Tab.Pane>))}
-              </Tab.Content>
-          </Col>
-        </Row>
-      </Tab.Container>
+    <>
+    <Modal show={playing} onHide={toggle_playing}>
+      <AdventurePlayer adventure={adventure}/>
+    </Modal>
+    <Container>
       <Row>
-        <Container>
-          <Col>
-          <Row>
-            Triggers
-          </Row>
-          <Row>
-            <ListGroup>
-              {triggers.map(trigger => (
-                <AdventureTrigger trigger={trigger} handleDeletion={() => delete_trigger(trigger)}/>
-              ))}
-            <ListGroup.Item>
-              <Button onClick={add_trigger}>Add Trigger</Button>
-            </ListGroup.Item>
-            </ListGroup>
-          </Row>
-          </Col>
-        </Container>
+        <Col>
+        <ButtonGroup>
+            <Button onClick={handleExport}>Export</Button>
+            <Button onClick={clickImport}>Import</Button>
+            <Form.File
+              onChange={handleImport}
+              accept=".json"
+              ref={ImportInput}
+              style ={{display:"none"}}/>
+            <Button onClick={toggle_playing}>Test</Button>
+        </ButtonGroup>
+        </Col>
       </Row>
       <Row>
         <Col>
-          <Button onClick={handleExport}>Export</Button>
-          <Button onClick={clickImport}>Import</Button>
-          <Form.File
-            onChange={handleImport}
-            accept=".json"
-            ref={ImportInput}
-            style ={{display:"none"}}/>
+        <BasicCollapsible title="Adventure Config">
+            <Form>
+              <FormGroup>
+                <Form.Label>Adventure name</Form.Label>
+                <FormControl placeholder="New adventure" value={adventure.name} onChange={(e) => setAdventure(updateProp(adventure,"name",e.target.value))} />
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Starting node</Form.Label>
+                <NodeSelectionDropdown value={startingNode} onChange={(e) => setAdventure(updateProp(adventure,"starting_node",e.target.value))} allowCustom={false}/>
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Starting qualities</Form.Label>
+                <KeyValueList value={adventure.starting_qualities} onChange={new_value => setAdventure(updateProp(adventure,"starting_qualities",new_value))}/>
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Required site traits</Form.Label>
+                <SimpleList presetValues={site_traits} value={adventure.required_site_traits} onChange={new_value => setAdventure(updateProp(adventure,"required_site_traits",new_value))}/>
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Loot type</Form.Label>
+                <SimpleList presetValues={loot_types} value={adventure.loot_types} onChange={new_value => setAdventure(updateProp(adventure,"loot_types",new_value))}/>
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Scanning modifiers</Form.Label>
+                <KeyValueList presetKeys={scan_bands} value={adventure.band_modifiers} onChange={new_value => setAdventure(updateProp(adventure,"band_modifiers",new_value))}/>
+              </FormGroup>
+            </Form>
+        </BasicCollapsible>
         </Col>
       </Row>
-    </Container>)
+      <Row>
+        <Col>
+          <BasicCollapsible title="Nodes">
+          <Tab.Container id="nodes" activeKey={openTab} onSelect={e => setActiveTab(e)}>
+            <Row>
+              <Col>
+                <Nav variant="tabs">
+                  {nodes.map(node => (
+                    <Nav.Item 
+                      key={node.id} 
+                      draggable 
+                      onDragEnd={e => end_dragging(e,node)} 
+                      onDragStart={e => start_dragging(e,node)} 
+                      onDrop={() => switch_node(node)}
+                      onDragOver={e => validate_drop(e,node)}
+                      >
+                      <Nav.Link eventKey={node.id}>{node.name}</Nav.Link>
+                    </Nav.Item>))}
+                  <Nav.Item>
+                    <Nav.Link onClick={add_node}>Add Node</Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Tab.Content>
+                    {nodes.map(node => (
+                      <Tab.Pane eventKey={node.id} key={node.id}>
+                        <AdventureNode 
+                          node={node}
+                          handleNodeDeletion={() => delete_node(node)}
+                          />
+                      </Tab.Pane>))}
+                  </Tab.Content>
+              </Col>
+            </Row>
+          </Tab.Container>
+          </BasicCollapsible>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+        <BasicCollapsible title="Triggers" startCollapsed>
+          <Container>
+            <Row>
+              {triggers.map(trigger => (
+                <Col xl="auto"><AdventureTrigger trigger={trigger} handleDeletion={() => delete_trigger(trigger)}/></Col>
+              ))}
+              <Col>
+                <Button onClick={add_trigger}>Add Trigger</Button>
+              </Col>
+            </Row>
+          </Container>
+        </BasicCollapsible>
+        </Col>
+      </Row>
+    </Container></>)
   }

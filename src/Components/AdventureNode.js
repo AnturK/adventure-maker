@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
-import { Button, Col, Container, Row, Card,CardGroup, ListGroup, FormControl, FormGroup, Form, ListGroupItem, InputGroup } from 'react-bootstrap'
+import { Button, Card,CardGroup, FormControl, FormGroup, Form, InputGroup } from 'react-bootstrap'
 import { useRecoilState } from 'recoil'
-import default_image from '../signal_lost.png'
 import { updateProp } from '../Helpers'
 import { NodeSelector, ChoiceData } from '../State'
 import { AdventureChoice } from './AdventureChoice'
 import { EffectBuilder } from './EffectBuilder'
+import {preset_images} from '../ExternalDefines'
 
 
 export function AdventureNode(props) {
@@ -51,7 +51,7 @@ export function AdventureNode(props) {
         setNode(updateProp(node, effect_prop, new_effects.length ? new_effects : undefined))
     }
 
-    const current_image = node.raw_image ? node.raw_image : default_image
+    const current_image = node.raw_image ? node.raw_image : preset_images[node.image]
     const imageInput = useRef()
     const try_uploading_image = () => {
         imageInput.current.click() //god why
@@ -77,7 +77,7 @@ export function AdventureNode(props) {
         reader.readAsDataURL(e.target.files[0])
     }
 
-    const reset_image = (e) => {
+    const reset_image = () => {
         const modified_node = {...node,
             raw_image:undefined,
             image:"default"
@@ -100,7 +100,9 @@ export function AdventureNode(props) {
                                 <InputGroup.Prepend>
                                     <InputGroup.Text>Image</InputGroup.Text>
                                 </InputGroup.Prepend>
-                                <Form.Control value={image_name_text} readOnly={node.raw_image !== undefined} onChange={update_image}/>
+                                <Form.Control as="select" value={image_name_text} readOnly={node.raw_image !== undefined} onChange={update_image}>
+                                    {Object.keys(preset_images).map(k => (<option key={k}>{k}</option>))}
+                                    </Form.Control>
                                 <Form.File type='file' accept="image/png" ref={imageInput} onChange={setUploadedImage} style={{display:"none"}}/>
                                 <InputGroup.Append>
                                     <Button onClick={try_uploading_image}>Custom</Button>
@@ -132,10 +134,8 @@ export function AdventureNode(props) {
                     </Card>
                     <Card>
                         <Card.Body>
-                            <Card.Header>Choices</Card.Header>
-                            <ListGroup>
+                            <Card.Title>Choices</Card.Title>
                                 {node.choices.map(choice => (
-                                    <ListGroup.Item key={choice.id}>
                                         <AdventureChoice
                                             choice={choice}
                                             handleChoiceDeletion={() => removeChoice(choice)}
@@ -143,10 +143,8 @@ export function AdventureNode(props) {
                                                 const new_choice = { ...choice, [choice_property]: new_value }
                                                 updateChoice(choice, new_choice)
                                             }}
-                                        />
-                                    </ListGroup.Item>))}
-                                <ListGroupItem><Button onClick={() => addChoice(new ChoiceData())}>Add Choice</Button></ListGroupItem>
-                            </ListGroup>
+                                        />))}
+                                <Button onClick={() => addChoice(new ChoiceData())}>Add Choice</Button>
                         </Card.Body>
                     </Card>
             </CardGroup>

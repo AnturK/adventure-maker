@@ -26,6 +26,7 @@
 			],
 			"choices": [
 				{
+					"key":"C1",
 					"name": "Go into the dark",
 					"description_mod": "This will show up at the end of description if this choice is availible.",
 					"exit_node": "spooky_ded",
@@ -47,6 +48,7 @@
 					]
 				},
 				{
+					"key":"C2",
 					"name": "Go the other way",
 					"exit_node": "spooky_win",
 					"requirements": [
@@ -90,6 +92,7 @@
 			"image": "signal_lost",
 			"choices": [
 				{
+					"key":"C1",
 					"name": "Die painfully...",
 					"exit_node": "FAIL"
 				}
@@ -104,6 +107,7 @@
 			"image": "loot",
 			"choices": [
 				{
+					"key":"C1",
 					"name": "Grab loot and escape!",
 					"exit_node": "WIN"
 				}

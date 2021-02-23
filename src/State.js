@@ -15,9 +15,10 @@ export class AdventureData {
         this.starting_node = ""
         this.nodes = []
         this.triggers = []
-        this.required_traits = []
+        this.required_site_traits = []
         this.loot_types = []
-        this.scanner_band_modifiers = []
+        this.band_modifiers = {}
+        this.starting_qualities = {}
     }
 }
 

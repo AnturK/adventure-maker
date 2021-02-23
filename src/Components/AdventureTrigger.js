@@ -1,10 +1,11 @@
-import React, { useRef } from 'react';
-import { Button, Col, Container, Row, Card, CardGroup, ListGroup, FormControl, FormGroup, Form, ListGroupItem, InputGroup } from 'react-bootstrap'
+import React from 'react';
+import { Button, Card, FormControl, FormGroup, Form } from 'react-bootstrap'
 import { useRecoilState } from 'recoil'
 import { updateProp } from '../Helpers'
 import { TriggerSelector } from '../State'
 import { RequirementsBuilder } from './RequirementsBuilder'
 import { EffectBuilder } from './EffectBuilder'
+import {NodeSelectionDropdown} from './Utility'
 
 
 export function AdventureTrigger(props) {
@@ -14,6 +15,10 @@ export function AdventureTrigger(props) {
 
     const update_trigger_name = (e) => {
         setTrigger(updateProp(trigger, "name", e.target.value))
+    }
+
+    const update_trigger_target_node = (e) => {
+        setTrigger(updateProp(trigger, "target_node", e.target.value))
     }
 
     const addEffect = (effect_prop, new_effect) => {
@@ -54,30 +59,32 @@ export function AdventureTrigger(props) {
 
 
     return (
-        <ListGroupItem>
-            <FormGroup>
-                <Form.Label>Trigger ID</Form.Label>
-                <FormControl value={trigger.name} onChange={update_trigger_name} />
-                <Button variant="danger" onClick={handleDeletion}>Delete</Button>
-            </FormGroup>
-            <FormGroup>
-                <Form.Label>Target Node On Trigger</Form.Label>
-                <FormControl value={trigger.target_node} onChange={update_trigger_name} />
-            </FormGroup>
-            <EffectBuilder
-                title="On Trigger Effects"
-                effects={trigger.on_trigger_effects}
-                handleEffectAdded={added => addEffect("on_trigger_effects", added)}
-                handleEffectsChanged={(old, prop, new_value) => updateEffects("on_trigger_effects", old, prop, new_value)}
-                handleEffectDeleted={deleted => deleteEffect("on_trigger_effects", deleted)} />
-            <RequirementsBuilder
-                title="Trigger Requirements"
-                requirements={props.trigger.requirements}
-                handleRequirementAdded={addRequirement}
-                handleRequirementDeleted={deleteRequirement}
-                handleRequirementsChanged={updateRequirements}
-            />
-        </ListGroupItem>
+        <Card>
+            <Card.Body>
+                <Card.Title>Trigger <Button variant="danger" onClick={handleDeletion}>Delete</Button></Card.Title>
+                <FormGroup>
+                    <Form.Label>Trigger ID</Form.Label>
+                    <FormControl value={trigger.name} onChange={update_trigger_name} />
+                </FormGroup>
+                <FormGroup>
+                    <Form.Label>Target Node On Trigger</Form.Label>
+                    <NodeSelectionDropdown allowNone={true} value={trigger.target_node} onChange={update_trigger_target_node}/>
+                </FormGroup>
+                <EffectBuilder
+                    title="On Trigger Effects"
+                    effects={trigger.on_trigger_effects}
+                    handleEffectAdded={added => addEffect("on_trigger_effects", added)}
+                    handleEffectsChanged={(old, prop, new_value) => updateEffects("on_trigger_effects", old, prop, new_value)}
+                    handleEffectDeleted={deleted => deleteEffect("on_trigger_effects", deleted)} />
+                <RequirementsBuilder
+                    title="Trigger Requirements"
+                    requirements={props.trigger.requirements}
+                    handleRequirementAdded={addRequirement}
+                    handleRequirementDeleted={deleteRequirement}
+                    handleRequirementsChanged={updateRequirements}
+                />
+            </Card.Body>
+        </Card>
 
     )
 }
