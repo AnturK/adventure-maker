@@ -51,6 +51,7 @@ export function AdventureEditor() {
         required_site_traits: adventure.required_site_traits,
         loot_categories : adventure.loot_types,
         scan_band_mods : adventure.band_modifiers,
+        deep_scan_description : adventure.deep_scan_description,
         triggers : adventure.triggers,
         nodes: nodes
       }
@@ -238,6 +239,10 @@ export function AdventureEditor() {
               <FormGroup>
                 <Form.Label>Scanning modifiers</Form.Label>
                 <KeyValueList presetKeys={scan_bands} adventureProp="band_modifiers"/>
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Deep scan description</Form.Label>
+                <FormControl value={adventure.deep_scan_description} onChange={(e) => setAdventure(updateProp(adventure,"deep_scan_description",e.target.value))} />
               </FormGroup>
             </Form>
         </BasicCollapsible>

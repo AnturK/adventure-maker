@@ -90,10 +90,13 @@ export function AdventurePlayer(props) {
         }
         switch(node_name){
             case "WIN":
-                alert("Here you would complete the adventure in real game")
+                alert("Here you would complete the adventure in real game and recieve loot.")
                 break
             case "FAIL":
-                alert("Here you would lose the adventure in real game")
+                alert("Here you would lose the adventure in real game and get dealt half integrity as damage.")
+                break
+            case "FAIL_DEATH":
+                alert("Here you would lose the adventure in real game and blown up.")
                 break
             case "GO_BACK":
                 navigateToNode(prevNode.name)

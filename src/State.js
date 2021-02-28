@@ -19,6 +19,7 @@ export class AdventureData {
         this.loot_types = []
         this.band_modifiers = {}
         this.starting_qualities = {}
+        this.deep_scan_description  = ""
     }
 }
 

@@ -3,7 +3,7 @@ import grue from './images/grue.png'
 import trader from './images/trade.png'
 import default_image from './images/default.png'
 
-export const special_nodes = ["FAIL","WIN","GO_BACK"]
+export const special_nodes = ["FAIL","FAIL_DEATH","WIN","GO_BACK"]
 
 export const site_traits = ["ruins","technology present","space station","alien","habitable","in vacuum","in space","on surface"]
 
