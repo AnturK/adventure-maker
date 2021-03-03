@@ -295,7 +295,7 @@ export function AdventureEditor() {
           <Container>
             <Row>
               {triggers.map(trigger => (
-                <Col xl="auto"><AdventureTrigger trigger={trigger} handleDeletion={() => delete_trigger(trigger)}/></Col>
+                <Col key={trigger.id} xl="auto"><AdventureTrigger trigger={trigger} handleDeletion={() => delete_trigger(trigger)}/></Col>
               ))}
               <Col>
                 <Button onClick={add_trigger}>Add Trigger</Button>

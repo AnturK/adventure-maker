@@ -112,20 +112,27 @@ export function AdventurePlayer(props) {
                 }
         }
     }
-
+    const triggerGuard = []
     const checkTriggers = () => {
-        if(adventure.triggers !== undefined)
-        for (let trigger of adventure.triggers) {
-            if(!check_group(trigger.requirements,"AND"))
-                continue
-            if(trigger.on_trigger_effects !== undefined){
-                if(apply_effects(trigger.on_trigger_effects))
+        if(adventure.triggers !== undefined){
+            for (let trigger of adventure.triggers) {
+                if(!check_group(trigger.requirements,"AND"))
+                    continue
+                if(triggerGuard.includes(trigger)){
+                    alert(`Recursive trigger detected. ${trigger.name}`)
+                    continue
+                }
+                triggerGuard.push(trigger)
+                if(trigger.on_trigger_effects !== undefined){
+                    if(apply_effects(trigger.on_trigger_effects))
+                        return true
+                }
+                if(trigger.target_node !== undefined)
+                    navigateToNode(trigger.target_node)
                     return true
             }
-            if(trigger.target_node !== undefined)
-                navigateToNode(trigger.target_node)
-                return true
         }
+        triggerGuard.length = 0
         return false;
     }
 
@@ -201,7 +208,7 @@ export function AdventurePlayer(props) {
                             <Card.Text>{currentNode.description}</Card.Text>
                             <Container>
                                 {currentNode.choices.map(choice => (
-                                    <Row><Col><Button disabled={!checkChoice(choice)} onClick={() => selectChoice(choice)}>{choice.name}</Button></Col></Row>
+                                    <Row key={choice.id}><Col><Button disabled={!checkChoice(choice)} onClick={() => selectChoice(choice)}>{choice.name}</Button></Col></Row>
                                 ))}
                             </Container>
                         </Card.Body>
@@ -217,7 +224,7 @@ export function AdventurePlayer(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {Object.keys(qualities).map(qname => (<tr><td>{qname}</td><td>{qualities[qname]}</td></tr>)) }
+                        {Object.keys(qualities).map(qname => (<tr key={qname}><td>{qname}</td><td>{qualities[qname]}</td></tr>)) }
                     </tbody>
                 </Table>
             </Row>

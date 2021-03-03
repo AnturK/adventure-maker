@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Button, Card,CardGroup, FormControl, FormGroup, Form, InputGroup } from 'react-bootstrap'
+import { Button, Card,Image, FormControl, FormGroup, Form, InputGroup, Container,Col,Row } from 'react-bootstrap'
 import { useRecoilState } from 'recoil'
 import { updateProp } from '../Helpers'
 import { NodeSelector, ChoiceData } from '../State'
@@ -91,11 +91,11 @@ export function AdventureNode(props) {
 
     const image_name_text = node.raw_image ? "custom image data" : node.image
     return (
-        <CardGroup>
+        <>
                     <Card>
                         <Card.Body>
                             <Card.Title>{node.name} <Button variant="danger" onClick={handleNodeDeletion}>Delete</Button></Card.Title>
-                            <Card.Img variant="top" src={current_image}  />
+                            <Image src={current_image} width="400px" height="200px"/>
                             <InputGroup>
                                 <InputGroup.Prepend>
                                     <InputGroup.Text>Image</InputGroup.Text>
@@ -130,11 +130,7 @@ export function AdventureNode(props) {
                                 handleEffectAdded={added => addEffect("on_exit_effects", added)}
                                 handleEffectsChanged={(old, prop, new_value) => updateEffects("on_exit_effects", old, prop, new_value)}
                                 handleEffectDeleted={deleted => deleteEffect("on_exit_effects", deleted)} />
-                        </Card.Body>
-                    </Card>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Choices</Card.Title>
+                            <Card.Header>Choices</Card.Header>
                                 {node.choices.map(choice => (
                                         <AdventureChoice
                                             key={choice.id}
@@ -148,6 +144,6 @@ export function AdventureNode(props) {
                                 <Button onClick={() => addChoice(new ChoiceData())}>Add Choice</Button>
                         </Card.Body>
                     </Card>
-            </CardGroup>
+            </>
     )
 }

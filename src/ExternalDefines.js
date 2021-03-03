@@ -5,7 +5,7 @@ import default_image from './images/default.png'
 
 export const special_nodes = ["FAIL","FAIL_DEATH","WIN","GO_BACK"]
 
-export const site_traits = ["ruins","technology present","space station","alien","habitable","in vacuum","in space","on surface"]
+export const site_traits = ["ruins","technology present","space station","alien","habitable","spaceship","in space","on surface"]
 
 export const scan_bands = ["Plasma absorption band","Hydrocarbons/Molecular oxygen","Narrow-band radio waves","Exotic Radiation","Increased Density"]
 
