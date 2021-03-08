@@ -20,6 +20,7 @@ export class AdventureData {
         this.band_modifiers = {}
         this.starting_qualities = {}
         this.deep_scan_description  = ""
+        this.author = "Anonymous"
     }
 }
 

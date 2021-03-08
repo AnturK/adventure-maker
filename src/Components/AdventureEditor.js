@@ -46,6 +46,7 @@ export function AdventureEditor() {
     const handleExport = () => {
       const data_object = {
         adventure_name: adventure.name,
+        author : adventure.author,
         starting_node: startingNode,
         starting_qualities: adventure.starting_qualities,
         required_site_traits: adventure.required_site_traits,
@@ -128,6 +129,7 @@ export function AdventureEditor() {
 
         const modified_adventure = {...adventure,
           name:result.adventure_name,
+          author : result.author,
           starting_node:result.starting_node,
           starting_qualities:result.starting_qualities,
           required_site_traits:result.required_site_traits,
@@ -219,6 +221,10 @@ export function AdventureEditor() {
               <FormGroup>
                 <Form.Label>Adventure name</Form.Label>
                 <FormControl placeholder="New adventure" value={adventure.name} onChange={(e) => setAdventure(updateProp(adventure,"name",e.target.value))} />
+              </FormGroup>
+              <FormGroup>
+                <Form.Label>Author</Form.Label>
+                <FormControl value={adventure.author} onChange={(e) => setAdventure(updateProp(adventure,"author",e.target.value))} />
               </FormGroup>
               <FormGroup>
                 <Form.Label>Starting node</Form.Label>

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Button, Card,Image, FormControl, FormGroup, Form, InputGroup, Container,Col,Row } from 'react-bootstrap'
+import { Button, Card,Image, FormControl, FormGroup, Form, InputGroup } from 'react-bootstrap'
 import { useRecoilState } from 'recoil'
 import { updateProp } from '../Helpers'
 import { NodeSelector, ChoiceData } from '../State'
@@ -60,7 +60,7 @@ export function AdventureNode(props) {
     const setUploadedImage = (e) => {
         var reader = new FileReader()
         reader.onload = (e) => {
-            var uploaded_image = new Image()
+            var uploaded_image = document.createElement('img');
             uploaded_image.onload = () =>{
                 if(uploaded_image.width !== 200 || uploaded_image.height !== 100){
                     alert(`Adventure images need to be be 200x100 pngs.`)
