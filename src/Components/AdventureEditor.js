@@ -25,8 +25,13 @@ export function AdventureEditor() {
       setAdventure(modified_adventure)
     }
     const delete_node = (node) => {
+      var old_index = nodes.findIndex(x => x === node)
       const changed_nodes = nodes.filter(x => x !== node)
       setAdventure(updateProp(adventure,"nodes",changed_nodes))
+      if(changed_nodes.length){
+          const new_index = Math.max(0,old_index -1)
+          setActiveTab(changed_nodes[new_index].id)
+      }
     }
 
     const add_trigger = () => {
