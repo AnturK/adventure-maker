@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import {Button, Card, InputGroup, FormControl } from 'react-bootstrap'
+import {Button, Card, InputGroup, FormControl,Form } from 'react-bootstrap'
 import {EffectBuilder} from './EffectBuilder'
 import {RequirementsBuilder} from './RequirementsBuilder'
 import {convertNumberValue} from '../Helpers'
@@ -55,6 +55,7 @@ export function AdventureChoice(props) {
     return (
       <Card>
         <Card.Body>
+          <Form.Text muted>Choice text visible to the player.</Form.Text>
           <InputGroup>
             <InputGroup.Prepend>
               <InputGroup.Text>Choice</InputGroup.Text>
@@ -64,12 +65,14 @@ export function AdventureChoice(props) {
               <Button variant="danger" onClick={handleChoiceDeletion}>Delete</Button>
             </InputGroup.Append>
           </InputGroup>
+          <Form.Text muted>The node navigated to by choosing this choice.</Form.Text>
           <InputGroup>
             <InputGroup.Prepend>
               <InputGroup.Text>Exit Node</InputGroup.Text>
             </InputGroup.Prepend>
             <NodeSelectionDropdown value={exitNodeSelectValue} onChange={changeExitNode} allowNone={false}/>
           </InputGroup>
+          <Form.Text muted>Delay between selecting the choice and entering exit node.</Form.Text>
           <InputGroup>
             <InputGroup.Prepend>
               <InputGroup.Text>Delay(ds)</InputGroup.Text>
@@ -78,12 +81,14 @@ export function AdventureChoice(props) {
             <InputGroup.Text>Message</InputGroup.Text>
             <FormControl value={props.choice.delay_message} onChange={(e) => handleChoiceChange("delay_message", e.target.value)} />
           </InputGroup>
+          <Form.Text muted>Quality changes that happen on selecting this choice. (Before navigating to exit node)</Form.Text>
           <EffectBuilder
               title="Selection Effects"
               effects={props.choice.on_selection_effects}
               handleEffectAdded={added => addEffect("on_selection_effects", added)}
               handleEffectsChanged={(old, prop, new_value) => updateEffects("on_selection_effects", old, prop, new_value)}
               handleEffectDeleted={deleted => deleteEffect("on_selection_effects", deleted)}/>
+          <Form.Text muted>Qualities required for this choice to be availible. Empty set means it's always viable.</Form.Text>
           <RequirementsBuilder
             title="Requirements"
             requirements={props.choice.requirements}

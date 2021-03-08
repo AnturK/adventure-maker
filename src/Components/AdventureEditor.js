@@ -220,34 +220,42 @@ export function AdventureEditor() {
             <Form>
               <FormGroup>
                 <Form.Label>Adventure name</Form.Label>
+                <Form.Text muted>Adventure name, should be specific as possible since it needs to be unique among all adventures</Form.Text>
                 <FormControl placeholder="New adventure" value={adventure.name} onChange={(e) => setAdventure(updateProp(adventure,"name",e.target.value))} />
               </FormGroup>
               <FormGroup>
                 <Form.Label>Author</Form.Label>
+                <Form.Text muted>Your name</Form.Text>
                 <FormControl value={adventure.author} onChange={(e) => setAdventure(updateProp(adventure,"author",e.target.value))} />
               </FormGroup>
               <FormGroup>
                 <Form.Label>Starting node</Form.Label>
+                <Form.Text muted>This is the node the adventure will being at. On Enter effects WILL fire for this node.</Form.Text>
                 <NodeSelectionDropdown value={startingNode} onChange={(e) => setAdventure(updateProp(adventure,"starting_node",e.target.value))} allowCustom={false}/>
               </FormGroup>
               <FormGroup>
                 <Form.Label>Starting qualities</Form.Label>
+                <Form.Text muted>These qualities will be set once before adventure begins on top of qualities provided by drone equipment.</Form.Text>
                 <KeyValueList adventureProp="starting_qualities"/>
               </FormGroup>
               <FormGroup>
                 <Form.Label>Required site traits</Form.Label>
+                <Form.Text muted>This adventure will only appear on exploration sites with all these traits</Form.Text>
                 <SimpleList presetValues={site_traits} adventureProp="required_site_traits"/>
               </FormGroup>
               <FormGroup>
                 <Form.Label>Loot type</Form.Label>
+                <Form.Text muted>Generator type used for adventure loot when win node is reached.</Form.Text>
                 <SimpleList presetValues={loot_types} adventureProp="loot_types"/>
               </FormGroup>
               <FormGroup>
                 <Form.Label>Scanning modifiers</Form.Label>
+                <Form.Text muted>These modifiers will be applied to point scan results of the exploration site with this adventure.</Form.Text>
                 <KeyValueList presetKeys={scan_bands} adventureProp="band_modifiers"/>
               </FormGroup>
               <FormGroup>
                 <Form.Label>Deep scan description</Form.Label>
+                <Form.Text muted>This description will be added to exploration site's description after a deep scan.</Form.Text>
                 <FormControl value={adventure.deep_scan_description} onChange={(e) => setAdventure(updateProp(adventure,"deep_scan_description",e.target.value))} />
               </FormGroup>
             </Form>
@@ -299,6 +307,7 @@ export function AdventureEditor() {
         <Col>
         <BasicCollapsible title="Triggers" startCollapsed>
           <Container>
+            <Row><Col><Form.Text muted>Triggers are checks that happen after any quality changes. If requirements are met the effects and/or node changes are applied over the choice that made it happen.</Form.Text></Col></Row>
             <Row>
               {triggers.map(trigger => (
                 <Col key={trigger.id} xl="auto"><AdventureTrigger trigger={trigger} handleDeletion={() => delete_trigger(trigger)}/></Col>

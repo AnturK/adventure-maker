@@ -111,18 +111,22 @@ export function AdventureNode(props) {
                             </InputGroup>
                             <FormGroup>
                                 <Form.Label>Node ID</Form.Label>
+                                <Form.Text muted>Node unique ID, this is not visible to the player</Form.Text>
                                 <FormControl value={node.name} onChange={update_node_name} />
                             </FormGroup>
                             <FormGroup>
                                 <Form.Label>Description</Form.Label>
+                                <Form.Text muted>Text shown to the player for this node. You can use $SITE_NAME to insert exploration site name in the text.</Form.Text>
                                 <FormControl as="textarea" rows={5} placeholder="Describe whatever here." value={node.description} onChange={(e) => setNode(updateProp(node, "description", e.target.value))} />
                             </FormGroup>
+                            <Form.Text muted>Quality changes that happen when node is entered by any means.</Form.Text>
                             <EffectBuilder
                                 title="On Enter Effects"
                                 effects={node.on_enter_effects}
                                 handleEffectAdded={added => addEffect("on_enter_effects", added)}
                                 handleEffectsChanged={(old, prop, new_value) => updateEffects("on_enter_effects", old, prop, new_value)}
                                 handleEffectDeleted={deleted => deleteEffect("on_enter_effects", deleted)} />
+                            <Form.Text muted>Quality changes that happen when node is exited by any means.</Form.Text>
                             <EffectBuilder
                                 title="On Exit Effects"
                                 effects={node.on_exit_effects}
