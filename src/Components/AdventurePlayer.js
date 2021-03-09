@@ -57,8 +57,7 @@ export function AdventurePlayer(props) {
                     if(req.group_type !== undefined){
                         if(!check_group(req.requirements,req.group_type))
                             return false;
-                    }
-                    if(!checkReq(req))
+                    }else if(!checkReq(req))
                         return false
                 }
                 return true;
@@ -67,8 +66,7 @@ export function AdventurePlayer(props) {
                     if(req.group_type !== undefined){
                         if(check_group(req,req.group_type))
                             return true;
-                    }
-                    if(checkReq(req))
+                    }else if(checkReq(req))
                         return true;
                 }
                 return false;
@@ -139,7 +137,7 @@ export function AdventurePlayer(props) {
     ///thanks mdn
     const getRandomInt = (min, max) => {
         min = Math.ceil(min);
-        max = Math.floor(max);
+        max = Math.floor(max+1); //[x..y] not [x..y)
         return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
     }
 
@@ -156,26 +154,24 @@ export function AdventurePlayer(props) {
     }
 
     const apply_effects = effect_list => {
+        var resulting_qualities = {...qualities}
         for (let effect of effect_list) {
             const extractedValue = extractValue(effect.value)
             switch(effect.effect_type){
                 case EffectTypes.Add:
-                    const a = {...qualities,[effect.quality]:(qualities[effect.quality] || 0)+extractedValue}
-                    setQualities(a)
+                    resulting_qualities[effect.quality] = (resulting_qualities[effect.quality] || 0) + extractedValue
                     break;
                 case EffectTypes.Set:
-                    const b = {...qualities,[effect.quality]:extractedValue}
-                    setQualities(b)
+                    resulting_qualities[effect.quality] = extractedValue
                     break;
                 case EffectTypes.Remove:
-                    const c = {...qualities}
-                    delete c[effect.quality]
-                    setQualities(c)
+                    delete resulting_qualities[effect.quality]
                     break;
                 default:
                     alert("wrong effect type")
             }
         }
+        setQualities(resulting_qualities)
         if(checkTriggers())
             return true
         return false;
