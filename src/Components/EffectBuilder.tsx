@@ -1,5 +1,5 @@
 import { Button, Card, ListGroup, FormControl, ListGroupItem, InputGroup } from 'react-bootstrap'
-import { EffectData } from './../State'
+import { EffectData } from '../State'
 import { convertNumberValue} from '../Helpers'
 import { ValueTypes,EffectTypes } from '../ExternalDefines'
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Col, Container, Row, Card,Alert,Table } from 'react-bootstrap'
 import {preset_images,EffectTypes,ValueTypes} from '../ExternalDefines'
 import {useRecoilState} from 'recoil'
-import { AdventureState } from '../State';
+import { AdventureState, TriggerData } from '../State';
 
 
 export function AdventurePlayer(props) {
@@ -97,7 +97,7 @@ export function AdventurePlayer(props) {
                 alert("Here you would lose the adventure in real game and blown up.")
                 break
             case "GO_BACK":
-                navigateToNode(prevNode.name)
+                navigateToNode(prevNode)
                 break
             default:
                 const next_node = adventure.nodes.find(node => node.name === node_name)
@@ -110,7 +110,7 @@ export function AdventurePlayer(props) {
                 }
         }
     }
-    const triggerGuard = []
+    const triggerGuard : Array<TriggerData> = []
     const checkTriggers = () => {
         if(adventure.triggers !== undefined){
             for (let trigger of adventure.triggers) {

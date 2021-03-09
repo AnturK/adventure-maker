@@ -1,15 +1,26 @@
-import { atom, selector, selectorFamily} from 'recoil'
+import { atom, selector, selectorFamily, SerializableParam} from 'recoil'
 import {replaceItemInArray} from './Helpers'
 
 /// Eugh
-export const global_ids = {};
-export function unique_id(category) {
+export const global_ids : Record<string,number> = {};
+export function unique_id(category : string) {
     category in global_ids ? global_ids[category] += 1 : global_ids[category] = 0
     return `${category} ${global_ids[category]}`
 }
 
 //Data classes
 export class AdventureData {
+    name : string;
+    starting_node : string;
+    nodes : Array<NodeData>;
+    triggers : Array<TriggerData>;
+    required_site_traits : Array<string>;
+    loot_types : Array<string>;
+    band_modifiers : Record<string,number>;
+    starting_qualities : Record<string,number|string>;
+    deep_scan_description : string;
+    author : string;
+
     constructor() {
         this.name = "New adventure"
         this.starting_node = ""
@@ -25,19 +36,33 @@ export class AdventureData {
 }
 
 export class NodeData {
+    id : string;
+    name : string;
+    description : string;
+    choices : Array<ChoiceData>;
+    image : string;
+    raw_image : string | undefined;
+    on_enter_effects : Array<EffectData> | undefined;
+    on_exit_effects : Array<EffectData> | undefined;
+
     constructor() {
         this.id = unique_id("Node")
         this.name = this.id
         this.description = "Node description goes here"
         this.choices = []
         this.image = "default"
-        this.image_raw = undefined
+        this.raw_image = undefined
         this.on_enter_effects = undefined
         this.on_exit_effects = undefined
     }
 }
 
 export class TriggerData{
+    id : string;
+    name : string;
+    target_node : string | undefined;
+    on_trigger_effects : Array<EffectData> | undefined;
+    requirements : Array<ReqData | ReqGroupData> | undefined;
     constructor(){
         this.id = unique_id("trigger")
         this.name = "Trigger"
@@ -48,6 +73,15 @@ export class TriggerData{
 }
 
 export class ChoiceData {
+    id : string;
+    key : string;
+    name : string;
+    exit_node : string;
+    on_selection_effects : Array<EffectData> | undefined;
+    requirements : Array<ReqData | ReqGroupData> | undefined;
+    delay : number;
+    delay_message : string | undefined;
+
     constructor() {
         this.id = unique_id("choice")
         this.key = this.id
@@ -61,6 +95,10 @@ export class ChoiceData {
 }
 
 export class EffectData {
+    id : string;
+    effect_type : string;
+    quality : string;
+    value : string | number;
     constructor() {
         this.id = unique_id("effect")
         this.effect_type = "Add"
@@ -70,6 +108,9 @@ export class EffectData {
 }
 
 export class ReqGroupData {
+    id : string;
+    group_type : string;
+    requirements : Array<ReqData | ReqGroupData>;
     constructor() {
         this.id = unique_id("req")
         this.group_type = "AND"
@@ -78,6 +119,10 @@ export class ReqGroupData {
 }
 
 export class ReqData {
+    id : string;
+    quality : string;
+    operator : string;
+    value : string | number;
     constructor() {
         this.id = unique_id("req")
         this.quality = "Quality"
@@ -99,11 +144,11 @@ export const NodesSelector = selector({
     }
 })
 
-export const NodeSelector = selectorFamily({
+export const NodeSelector = selectorFamily<NodeData,SerializableParam>({
     key: "single_node",
     get: (id) => ({ get }) => {
         const adventure = get(AdventureState);
-        return adventure.nodes.find(x => x.id === id)
+        return adventure.nodes.find(x => x.id === id);
     },
     set: (id) => ({ set, get }, newValue) => {
         const current = get(AdventureState)
@@ -120,11 +165,11 @@ export const TriggersSelector = selector({
     }
 })
 
-export const TriggerSelector = selectorFamily({
+export const TriggerSelector = selectorFamily<TriggerData,SerializableParam>({
     key: "single_trigger",
     get: (id) => ({ get }) => {
         const adventure = get(AdventureState);
-        return adventure.triggers.find(x => x.id === id)
+        return adventure.triggers.find(x => x.id === id);
     },
     set: (id) => ({ set, get }, newValue) => {
         const current = get(AdventureState)

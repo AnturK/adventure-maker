@@ -1,8 +1,8 @@
 import React,{useRef, useState} from 'react'
 import { Button, Col, Container, Row, Tab, Nav, FormControl, FormGroup, Form, ButtonGroup,Modal } from 'react-bootstrap'
-import {useRecoilState} from 'recoil'
-import {AdventureState,NodesSelector,NodeData,TriggersSelector,TriggerData, unique_id} from './../State'
-import {updateProp} from './../Helpers'
+import {useRecoilState, useRecoilValue} from 'recoil'
+import {AdventureState,NodesSelector,NodeData,TriggersSelector,TriggerData, unique_id} from '../State'
+import {updateProp} from '../Helpers'
 import {AdventureNode} from './AdventureNode'
 import {AdventureTrigger} from './AdventureTrigger'
 import {BasicCollapsible,NodeSelectionDropdown, KeyValueList, SimpleList} from './Utility'
@@ -12,8 +12,8 @@ import { AdventurePlayer } from './AdventurePlayer'
 
 export function AdventureEditor() {
     const [adventure,setAdventure] = useRecoilState(AdventureState);
-    const [nodes] = useRecoilState(NodesSelector)
-    const [triggers] = useRecoilState(TriggersSelector)
+    const nodes = useRecoilValue(NodesSelector)
+    const triggers = useRecoilValue(TriggersSelector)
 
     const [activeTab,setActiveTab] = useState("")
     const [draggedItem,setDraggedItem] = useState(null)
@@ -127,7 +127,7 @@ export function AdventureEditor() {
     const handleImport = e => {
       var reader = new FileReader()
       reader.onload = (e) =>{
-        const result = JSON.parse(e.target.result)
+        const result = JSON.parse(e.target.result as string);
 
         const reindexed_nodes = regenerate_ids(result.nodes)
         const reindexed_triggers = regenerate_trigger_ids(result.triggers)
@@ -148,18 +148,18 @@ export function AdventureEditor() {
       reader.readAsText(e.target.files[0])
     }
 
-    const ImportInput = useRef()
+    const ImportInput = useRef<HTMLInputElement>()
     const clickImport = () => {
       ImportInput.current.click()
     }
 
-    const ExportLink = useRef()
+    const ExportLink = useRef<HTMLAnchorElement>()
 
     const start_dragging = (e,node) => {
       setDraggedItem(node)
     } 
 
-    const end_dragging = () => {
+    const end_dragging = (e,node) => {
       setDraggedItem(null)
     }
 

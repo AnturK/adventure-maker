@@ -52,7 +52,7 @@ export function AdventureNode(props) {
     }
 
     const current_image = node.raw_image ? node.raw_image : preset_images[node.image]
-    const imageInput = useRef()
+    const imageInput = useRef<HTMLInputElement>()
     const try_uploading_image = () => {
         imageInput.current.click() //god why
     }
@@ -67,12 +67,12 @@ export function AdventureNode(props) {
                     return
                 }
                 const modified_node = {...node,
-                    raw_image:e.target.result,
+                    raw_image:e.target.result as string,
                     image:null
                 }
                 setNode(modified_node)
             }
-            uploaded_image.src = e.target.result
+            uploaded_image.src = e.target.result as string
         }
         reader.readAsDataURL(e.target.files[0])
     }
