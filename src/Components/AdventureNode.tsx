@@ -116,7 +116,7 @@ export function AdventureNode(props) {
                             </FormGroup>
                             <FormGroup>
                                 <Form.Label>Description</Form.Label>
-                                <Form.Text muted>Text shown to the player for this node. You can use $SITE_NAME to insert exploration site name in the text.</Form.Text>
+                                <Form.Text muted>Text shown to the player for this node. You can use $$SITE_NAME to insert exploration site name in the text. Use $$QualityName to place current quality value in text.</Form.Text>
                                 <FormControl as="textarea" rows={5} placeholder="Describe whatever here." value={node.description} onChange={(e) => setNode(updateProp(node, "description", e.target.value))} />
                             </FormGroup>
                             <Form.Text muted>Quality changes that happen when node is entered by any means.</Form.Text>

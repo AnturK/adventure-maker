@@ -185,6 +185,18 @@ export function AdventurePlayer(props) {
         navigateToNode(choice.exit_node)
     }
 
+    const replaceKeywords = (text : string) => {
+        const subRegex = /\$\$(\S*)/g;
+        return text.replace(subRegex, (match,g1) => { 
+            switch (g1) {
+                case "SITE_NAME":
+                    return "SITE NAME WOULD GO HERE"
+                default:
+                    return qualities[g1] as string
+            }
+         })
+    }
+
     if(!currentNode)
         return (<Alert variant="danger">You need at least one node to play.</Alert>)
 
@@ -201,7 +213,7 @@ export function AdventurePlayer(props) {
                     <Card>
                         <Card.Img src={currentNode.raw_image ? currentNode.raw_image : preset_images[currentNode.image]}/>
                         <Card.Body>
-                            <Card.Text>{currentNode.description}</Card.Text>
+                            <Card.Text>{replaceKeywords(currentNode.description)}</Card.Text>
                             <Container>
                                 {currentNode.choices.map(choice => (
                                     <Row key={choice.id}><Col><Button disabled={!checkChoice(choice)} onClick={() => selectChoice(choice)}>{choice.name}</Button></Col></Row>
