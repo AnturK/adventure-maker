@@ -9,7 +9,7 @@ export const site_traits = ["ruins","technology present","space station","alien"
 
 export const scan_bands = ["Plasma absorption band","Hydrocarbons/Molecular oxygen","Narrow-band radio waves","Exotic Radiation","Increased Density"]
 
-export const loot_types = ["maint","drugs","research","weapons","pets","unique"]
+export const loot_types = ["maint","drugs","trade_contract","weapons","pets","unique","cash","materials"]
 
 
 export const preset_images = {
