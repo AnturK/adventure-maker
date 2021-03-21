@@ -1,5 +1,5 @@
 import React,{useRef, useState} from 'react'
-import { Button, Col, Container, Row, Tab, Nav, FormControl, FormGroup, Form, ButtonGroup,Modal } from 'react-bootstrap'
+import { Button, Col, Container, Row, Tab, Nav, FormControl, FormGroup, Form, ButtonGroup,Modal, OverlayTrigger,Tooltip, ButtonToolbar } from 'react-bootstrap'
 import {useRecoilState, useRecoilValue} from 'recoil'
 import {AdventureState,NodesSelector,NodeData,TriggersSelector,TriggerData, unique_id} from '../State'
 import {updateProp} from '../Helpers'
@@ -8,6 +8,7 @@ import {AdventureTrigger} from './AdventureTrigger'
 import {BasicCollapsible,NodeSelectionDropdown, KeyValueList, SimpleList} from './Utility'
 import {scan_bands, loot_types, site_traits} from '../ExternalDefines'
 import { AdventurePlayer } from './AdventurePlayer'
+import example_adventure from '../example/Theres_a_tree_in_the_middle_of_space.json'
 
 
 export function AdventureEditor() {
@@ -123,29 +124,37 @@ export function AdventureEditor() {
       }
       return trigger_list
     }
+
+    const importAdventure = (jsonData) => {
+      const json = JSON.parse(jsonData);
+      const reindexed_nodes = regenerate_ids(json.nodes)
+      const reindexed_triggers = regenerate_trigger_ids(json.triggers)
+
+      const modified_adventure = {...adventure,
+        name:json.adventure_name,
+        author : json.author,
+        starting_node:json.starting_node,
+        starting_qualities:json.starting_qualities,
+        required_site_traits:json.required_site_traits,
+        band_modifiers:json.scan_band_mods,
+        loot_types:json.loot_categories,
+        triggers:reindexed_triggers,
+        nodes:reindexed_nodes
+      }
+      setAdventure(modified_adventure)
+    }
   
     const handleImport = e => {
       var reader = new FileReader()
       reader.onload = (e) =>{
-        const result = JSON.parse(e.target.result as string);
-
-        const reindexed_nodes = regenerate_ids(result.nodes)
-        const reindexed_triggers = regenerate_trigger_ids(result.triggers)
-
-        const modified_adventure = {...adventure,
-          name:result.adventure_name,
-          author : result.author,
-          starting_node:result.starting_node,
-          starting_qualities:result.starting_qualities,
-          required_site_traits:result.required_site_traits,
-          band_modifiers:result.scan_band_mods,
-          loot_types:result.loot_categories,
-          triggers:reindexed_triggers,
-          nodes:reindexed_nodes
-        }
-        setAdventure(modified_adventure)
+        
+        importAdventure(e.target.result as string)
       }
       reader.readAsText(e.target.files[0])
+    }
+
+    const handleExample = e => {
+      importAdventure(JSON.stringify(example_adventure))
     }
 
     const ImportInput = useRef<HTMLInputElement>()
@@ -198,6 +207,12 @@ export function AdventureEditor() {
       setPlaying(!playing)
     }
 
+    const renderTooltip = (text) => (props) => (
+      <Tooltip id="button-tooltip" {...props}>
+        {text}
+      </Tooltip>
+    );
+
     return (
     <>
     <Modal show={playing} onHide={toggle_playing}>
@@ -206,7 +221,8 @@ export function AdventureEditor() {
     <Container>
       <Row>
         <Col>
-        <ButtonGroup>
+        <ButtonToolbar>
+        <ButtonGroup className="mr-2">
             <Button onClick={handleExport}>Export</Button>
             <a ref={ExportLink} style={{display:"none"}} href="/">God is this really how JS supposed to work</a>
             <Button onClick={clickImport}>Import</Button>
@@ -217,6 +233,12 @@ export function AdventureEditor() {
               style ={{display:"none"}}/>
             <Button onClick={toggle_playing}>Test</Button>
         </ButtonGroup>
+        <ButtonGroup>
+          <OverlayTrigger placement="right" overlay={renderTooltip("Loads example adventure")}>
+            <Button onClick={handleExample}>Load Example Adventure</Button>
+          </OverlayTrigger>
+        </ButtonGroup>
+        </ButtonToolbar>
         </Col>
       </Row>
       <Row>

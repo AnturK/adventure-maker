@@ -1,4 +1,4 @@
-import { Button, Card, ListGroup, FormControl, ListGroupItem, InputGroup } from 'react-bootstrap'
+import { Button, Card, ListGroup, FormControl, ListGroupItem, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { EffectData } from '../State'
 import { convertNumberValue} from '../Helpers'
 import { ValueTypes,EffectTypes } from '../ExternalDefines'
@@ -44,11 +44,16 @@ function Effect(props) {
         }
     }
 
+    const EffectReadme = "Add - Adds/Substracts value from current quality value \n\n Set - Sets quality to value \n\n Remove - resets quality completely"
+
     return (
+        
         <InputGroup>
+            <OverlayTrigger placement="top" overlay={<Tooltip id="sorry_accessibilty" style={{whiteSpace:"pre-wrap"}}>{EffectReadme}</Tooltip>}>
             <FormControl as="select" value={props.effect.effect_type} onChange={e => handleChange("effect_type", e.target.value)}>
                 {Object.keys(EffectTypes).map(k => (<option key={k}>{EffectTypes[k]}</option>))}
             </FormControl>
+            </OverlayTrigger>
             <InputGroup.Prepend>
                 <InputGroup.Text>Quality</InputGroup.Text>
             </InputGroup.Prepend>
