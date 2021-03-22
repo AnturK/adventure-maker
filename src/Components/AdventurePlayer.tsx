@@ -19,30 +19,30 @@ export function AdventurePlayer(props) {
         setPrevNode(currentNode.name)
     }
 
-    const checkReq = req => {
+    const checkReq = (req, qstore) => {
         switch(req.operator){
             case "==":
-                if(qualities[req.quality] === req.value)
+                if(qstore[req.quality] === req.value)
                     return true
                 break
             case "!=":
-                if(qualities[req.quality] !== req.value)
+                if(qstore[req.quality] !== req.value)
                     return true
                 break
             case "<=":
-                if(qualities[req.quality] <= req.value)
+                if(qstore[req.quality] <= req.value)
                     return true
                 break
             case ">=":
-                if(qualities[req.quality] >= req.value)
+                if(qstore[req.quality] >= req.value)
                     return true
                 break
             case ">":
-                if(qualities[req.quality] > req.value)
+                if(qstore[req.quality] > req.value)
                     return true
                 break
             case "<":
-                if(qualities[req.quality] < req.value)
+                if(qstore[req.quality] < req.value)
                     return true
                 break
             default:
@@ -50,23 +50,23 @@ export function AdventurePlayer(props) {
         }
     }
 
-    const check_group = (req_group,group_type) => {
+    const check_group = (req_group,group_type,qstore) => {
         switch(group_type){
             case "AND":
                 for(let req of req_group){
                     if(req.group_type !== undefined){
-                        if(!check_group(req.requirements,req.group_type))
+                        if(!check_group(req.requirements,req.group_type,qstore))
                             return false;
-                    }else if(!checkReq(req))
+                    }else if(!checkReq(req,qstore))
                         return false
                 }
                 return true;
             case "OR":
                 for(let req of req_group){
                     if(req.group_type !== undefined){
-                        if(check_group(req,req.group_type))
+                        if(check_group(req,req.group_type,qstore))
                             return true;
-                    }else if(checkReq(req))
+                    }else if(checkReq(req,qstore))
                         return true;
                 }
                 return false;
@@ -75,15 +75,15 @@ export function AdventurePlayer(props) {
         }
     }
 
-    const checkChoice = choice => {
+    const checkChoice = (choice,qstore) => {
         if(choice.requirements === undefined)
             return true
-        return check_group(choice.requirements,"AND")
+        return check_group(choice.requirements,"AND",qstore)
     }
 
-    const navigateToNode = node_name => {
+    const navigateToNode = (node_name,qstore) => {
         if(currentNode.on_exit_effects !== undefined){
-            if(apply_effects(currentNode.on_exit_effects))
+            if(apply_effects(currentNode.on_exit_effects,qstore))
                 return
         }
         switch(node_name){
@@ -97,7 +97,7 @@ export function AdventurePlayer(props) {
                 alert("Here you would lose the adventure in real game and blown up.")
                 break
             case "GO_BACK":
-                navigateToNode(prevNode)
+                navigateToNode(prevNode,qstore)
                 break
             default:
                 const next_node = adventure.nodes.find(node => node.name === node_name)
@@ -105,16 +105,16 @@ export function AdventurePlayer(props) {
                 if(prevNode !== next_node.name)
                     setPrevNode(next_node.name)
                 if(next_node.on_enter_effects !== undefined){
-                    if(apply_effects(next_node.on_enter_effects))
+                    if(apply_effects(next_node.on_enter_effects,qstore))
                         return
                 }
         }
     }
     const triggerGuard : Array<TriggerData> = []
-    const checkTriggers = () => {
+    const checkTriggers = (qstore) => {
         if(adventure.triggers !== undefined){
             for (let trigger of adventure.triggers) {
-                if(!check_group(trigger.requirements,"AND"))
+                if(!check_group(trigger.requirements,"AND",qstore))
                     continue
                 if(triggerGuard.includes(trigger)){
                     alert(`Recursive trigger detected. ${trigger.name}`)
@@ -122,11 +122,11 @@ export function AdventurePlayer(props) {
                 }
                 triggerGuard.push(trigger)
                 if(trigger.on_trigger_effects !== undefined){
-                    if(apply_effects(trigger.on_trigger_effects))
+                    if(apply_effects(trigger.on_trigger_effects,qstore))
                         return true
                 }
                 if(trigger.target_node !== undefined)
-                    navigateToNode(trigger.target_node)
+                    navigateToNode(trigger.target_node,qstore)
                     return true
             }
         }
@@ -153,8 +153,8 @@ export function AdventurePlayer(props) {
         return value;
     }
 
-    const apply_effects = effect_list => {
-        var resulting_qualities = {...qualities}
+    const apply_effects = (effect_list,qstore) => {
+        var resulting_qualities = {...qstore}
         for (let effect of effect_list) {
             const extractedValue = extractValue(effect.value)
             switch(effect.effect_type){
@@ -172,17 +172,18 @@ export function AdventurePlayer(props) {
             }
         }
         setQualities(resulting_qualities)
-        if(checkTriggers())
+        if(checkTriggers(resulting_qualities))
             return true
         return false;
     }
 
     const selectChoice = (choice) => {
+        const qstore = {...qualities}
         if(choice.on_selection_effects !== undefined){
-            if(apply_effects(choice.on_selection_effects))
+            if(apply_effects(choice.on_selection_effects,qstore))
                 return
         }
-        navigateToNode(choice.exit_node)
+        navigateToNode(choice.exit_node,qstore)
     }
 
     const replaceKeywords = (text : string) => {
@@ -216,7 +217,7 @@ export function AdventurePlayer(props) {
                             <Card.Text>{replaceKeywords(currentNode.description)}</Card.Text>
                             <Container>
                                 {currentNode.choices.map(choice => (
-                                    <Row key={choice.id}><Col><Button disabled={!checkChoice(choice)} onClick={() => selectChoice(choice)}>{choice.name}</Button></Col></Row>
+                                    <Row key={choice.id}><Col><Button disabled={!checkChoice(choice,qualities)} onClick={() => selectChoice(choice)}>{choice.name}</Button></Col></Row>
                                 ))}
                             </Container>
                         </Card.Body>
