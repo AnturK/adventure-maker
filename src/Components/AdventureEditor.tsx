@@ -6,7 +6,7 @@ import {updateProp} from '../Helpers'
 import {AdventureNode} from './AdventureNode'
 import {AdventureTrigger} from './AdventureTrigger'
 import {BasicCollapsible,NodeSelectionDropdown, KeyValueList, SimpleList} from './Utility'
-import {scan_bands, loot_types, site_traits} from '../ExternalDefines'
+import {scan_bands, loot_types, site_traits, json_version} from '../ExternalDefines'
 import { AdventurePlayer } from './AdventurePlayer'
 import example_adventure from '../example/Theres_a_tree_in_the_middle_of_space.json'
 
@@ -52,6 +52,7 @@ export function AdventureEditor() {
     const handleExport = () => {
       const data_object = {
         adventure_name: adventure.name,
+        version: json_version,
         author : adventure.author,
         starting_node: startingNode,
         starting_qualities: adventure.starting_qualities,

@@ -11,6 +11,7 @@ export const scan_bands = ["Plasma absorption band","Hydrocarbons/Molecular oxyg
 
 export const loot_types = ["maint","drugs","trade_contract","weapons","pets","unique","cash","materials"]
 
+export const json_version = 1
 
 export const preset_images = {
     default : default_image,
