@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/adventure-maker/static/css/main.9d5b29c0.chunk.css",
-    "main.js": "/adventure-maker/static/js/main.bbed97f2.chunk.js",
-    "main.js.map": "/adventure-maker/static/js/main.bbed97f2.chunk.js.map",
+    "main.js": "/adventure-maker/static/js/main.668faf8e.chunk.js",
+    "main.js.map": "/adventure-maker/static/js/main.668faf8e.chunk.js.map",
     "runtime-main.js": "/adventure-maker/static/js/runtime-main.f54ce07b.js",
     "runtime-main.js.map": "/adventure-maker/static/js/runtime-main.f54ce07b.js.map",
     "static/css/2.ef9168ec.chunk.css": "/adventure-maker/static/css/2.ef9168ec.chunk.css",
@@ -20,6 +20,6 @@
     "static/css/2.ef9168ec.chunk.css",
     "static/js/2.7e82196b.chunk.js",
     "static/css/main.9d5b29c0.chunk.css",
-    "static/js/main.bbed97f2.chunk.js"
+    "static/js/main.668faf8e.chunk.js"
   ]
 }
