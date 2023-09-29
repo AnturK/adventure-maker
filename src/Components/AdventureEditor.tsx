@@ -69,7 +69,7 @@ export function AdventureEditor() {
           return undefined
         return value;
       }
-      const blob = new Blob([JSON.stringify(data_object, remove_ids)], { type: 'application/json' })
+      const blob = new Blob([JSON.stringify(data_object, remove_ids, "\t")], { type: 'application/json' })
       const blob_url = URL.createObjectURL(blob)
       
       ExportLink.current.href = blob_url
