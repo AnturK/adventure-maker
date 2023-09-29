@@ -1,25 +1,15 @@
 {
   "files": {
-    "main.css": "/adventure-maker/static/css/main.9d5b29c0.chunk.css",
-    "main.js": "/adventure-maker/static/js/main.668faf8e.chunk.js",
-    "main.js.map": "/adventure-maker/static/js/main.668faf8e.chunk.js.map",
-    "runtime-main.js": "/adventure-maker/static/js/runtime-main.f54ce07b.js",
-    "runtime-main.js.map": "/adventure-maker/static/js/runtime-main.f54ce07b.js.map",
-    "static/css/2.ef9168ec.chunk.css": "/adventure-maker/static/css/2.ef9168ec.chunk.css",
-    "static/js/2.7e82196b.chunk.js": "/adventure-maker/static/js/2.7e82196b.chunk.js",
-    "static/js/2.7e82196b.chunk.js.map": "/adventure-maker/static/js/2.7e82196b.chunk.js.map",
-    "static/js/3.355926da.chunk.js": "/adventure-maker/static/js/3.355926da.chunk.js",
-    "static/js/3.355926da.chunk.js.map": "/adventure-maker/static/js/3.355926da.chunk.js.map",
+    "main.css": "/adventure-maker/static/css/main.4fc151e5.css",
+    "main.js": "/adventure-maker/static/js/main.89decaef.js",
+    "static/js/787.d1beccba.chunk.js": "/adventure-maker/static/js/787.d1beccba.chunk.js",
     "index.html": "/adventure-maker/index.html",
-    "static/css/2.ef9168ec.chunk.css.map": "/adventure-maker/static/css/2.ef9168ec.chunk.css.map",
-    "static/css/main.9d5b29c0.chunk.css.map": "/adventure-maker/static/css/main.9d5b29c0.chunk.css.map",
-    "static/js/2.7e82196b.chunk.js.LICENSE.txt": "/adventure-maker/static/js/2.7e82196b.chunk.js.LICENSE.txt"
+    "main.4fc151e5.css.map": "/adventure-maker/static/css/main.4fc151e5.css.map",
+    "main.89decaef.js.map": "/adventure-maker/static/js/main.89decaef.js.map",
+    "787.d1beccba.chunk.js.map": "/adventure-maker/static/js/787.d1beccba.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.f54ce07b.js",
-    "static/css/2.ef9168ec.chunk.css",
-    "static/js/2.7e82196b.chunk.js",
-    "static/css/main.9d5b29c0.chunk.css",
-    "static/js/main.668faf8e.chunk.js"
+    "static/css/main.4fc151e5.css",
+    "static/js/main.89decaef.js"
   ]
 }
